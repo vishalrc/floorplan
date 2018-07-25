@@ -1,0 +1,682 @@
+﻿@using com.JLT.Common.Utility;
+@using com.JLT.Entity;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+    var Adminrole = Convert.ToInt32(Enums.UserRoles.Admin);
+    var Authrole = Convert.ToInt32(Enums.UserRoles.Authorizer);
+    var Proctorrole = Convert.ToInt32(Enums.UserRoles.Proctor);
+    var emailregex = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.EamilRegEx);
+}
+
+<div class="wrapper-md">
+    <!-- Button trigger Add User modal -->
+    <button type="button" class="btn m-b-xs btn-sm btn-primary btn-addon" id="btn_addusermodel" data-toggle="modal"
+        data-target="#addUserModal">
+        <i class="fa fa-plus"></i>New</button>
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addUserModalLabel">Add User</h4>
+                </div>
+                <form id="frm_saveuser" action="#" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group" id="ug_UserName">
+                        <input type="hidden" id="hdnUserId" />
+                        <label class="col-sm-2 control-label required-star" for="txtUserName">
+                            Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtUserName" placeholder="User name" required>
+                        </div>
+                    </div>
+                    <div class="form-group" id="ug_Email">
+                        <label class="col-sm-2 control-label required-star" for="txtEmail">
+                            Email Id</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="txtEmail" placeholder="Email Id" required>
+                        </div>
+                    </div>                    
+                    <div class="form-group" id="ug_Password">
+                        <label class="col-sm-2 control-label required-star" id="lblPassword" for="txtPassword">
+                            Password</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="txtPassword" placeholder="Password" required>
+                                <span class="input-group-addon view-password"><i class="fa fa-eye eye-open"></i><i class="fa fa-eye-slash eye-closed hide"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="ug_Role">
+                        <label class="col-sm-2 control-label required-star">User Role</label>
+                       <div class="col-sm-10">
+                            <div class="checkbox">
+                                <label class="i-checks i-checks-sm">
+                                    <input type="checkbox" class="form-control" id="chkAdmin" name="role" value="15">
+                                    <i></i>Admin
+                                </label>
+                                <label class="i-checks i-checks-sm">
+                                    <input type="checkbox" class="form-control" id="chkAuth" name="role" value="17">
+                                    <i></i>Authorizer
+                                </label>
+                                <label class="i-checks i-checks-sm">
+                                    <input type="checkbox" class="form-control" id="chkProctor" name="role" value="33">
+                                    <i></i>Proctor
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="line line-dashed b-b line-lg pull-in"></div>*@
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Status</label>
+                        <div class="col-sm-10">
+                            <div class="radio">
+                                <label class="i-checks">
+                                    <input type="radio" id="radActive" name="status" value="1" checked>
+                                    <i></i>Active
+                                </label>
+                                <label class="i-checks">
+                                    <input type="radio" id="radInactive" name="status" value="0">
+                                    <i></i>Inactive
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" data-dismiss="modal">
+                        Close</button>
+                    <button type="button" class="btn btn-primary" id="btn_saveuser">
+                        Submit</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add User Modal - End -->
+    <!-- Assign Test Modal -->
+    <div class="modal fade" id="assignTestModal" tabindex="-1" role="dialog" aria-labelledby="assignTestModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="assignTestModalLabel">Assign Tests</h4>
+                </div>
+                <form id="frm_assigntest" action="#" class="form-horizontal">
+                <input type="hidden" id="hdnUserId_assigntest" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="action-ribbon width-95pc-imp">
+                            <span class="action-button" data-toggle="tooltip" data-placement="top" title="Sort by name ascending"><i class="fa fa-sort-alpha-asc"></i></span>
+                            <span class="action-button" data-toggle="tooltip" data-placement="top" title="Sort by name descending"><i class="fa fa-sort-alpha-desc"></i></span>
+                        </div>
+                    </div>
+                    <div class="row m-t" id="div_tests">
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="thumbnail bg-testlist cursor-pointer select-entity">
+                                    <span class="vertical-align-top">Hindi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close</button>
+                    <button type="button" class="btn btn-primary" id="btn_assigntest">
+                        Assign</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Assign Test Modal - End -->
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs m-t" role="tablist">
+        <li role="presentation" class="active"><a href="#active" aria-controls="active" role="tab"
+            data-toggle="tab">Active Users <span id="activebadge" class="badge progress-bar-info">4</span></a></li>
+        <li role="presentation"><a href="#inactive" aria-controls="inactive" role="tab" data-toggle="tab">
+            Inactive Users <span id="inactivebadge" class="badge progress-bar-info">4</span></a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="row">
+            <div class="action-ribbon">
+                <span class="action-button" id="list_view" data-toggle="tooltip" data-placement="top" title="List view"><i class="fa fa-th-list"></i></span>
+                <span class="action-button" id="thumbnail_view" data-toggle="tooltip" data-placement="top" title="Thumbnail view"><i class="fa fa-th-large"></i></span>
+                <span class="action-button" id="sort_user_asc" data-toggle="tooltip" data-placement="top" title="Sort by name ascending"><i class="fa fa-sort-alpha-asc"></i></span>
+                <span class="action-button" id="sort_user_desc" data-toggle="tooltip" data-placement="top" title="Sort by name descending"><i class="fa fa-sort-alpha-desc"></i></span>
+                <span class="action-button" id="filter-admin-user" data-toggle="tooltip" data-placement="top" title="Filter admins"><i class="fa fa-user"></i></span>
+                <span class="action-button" id="filter-proctor-user" data-toggle="tooltip" data-placement="top" title="Filter proctors"><i class="fa fa-eye"></i></span>
+                <span class="action-button" id="filter-auth-user" data-toggle="tooltip" data-placement="top" title="Filter authorizers"><i class="fa fa-check"></i></span>
+                <span class="action-button" id="filter-all-user" data-toggle="tooltip" data-placement="top" title="Show all users"><i class="fa fa-users"></i></span>
+                <input type="text" class="filter-user-text" id="txtFilterUser" placeholder="Filter users" />
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane active" id="active">            
+            <div id="active_row" class="row m-t"></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="inactive">
+            <div id="inactive_row" class="row m-t"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+(function () {
+    "use strict";
+    var apiurl = '@RestAPI',
+        baseURL = '@Url.Action("Index","Home")';
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    $(document).ready(function () {
+        CommonMethods.Init();
+        UIEvents.CleanUserSaveModel();
+        UIEvents.PopulateEditUser();
+        UIEvents.PopulateUserTestAssociation();
+        UIEvents.SaveUser();
+        UIEvents.TogglePassword();
+        UIEvents.ToggleUserThumbnailButtons();
+        UIEvents.SelectAssignTest();
+        UIEvents.AssignTest();
+        SortFilter.SortUserAsc();
+        SortFilter.SortUserDesc();
+        SortFilter.FilterAdminUser();
+        SortFilter.FilterProctorUser();
+        SortFilter.FilterAuthUser();
+        SortFilter.FilterAllUser();
+        SortFilter.UserFilterByText();
+
+    });       //Document.ready ends
+    /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+    var CommonMethods = {
+        Init: function () {
+            if(sessionStorage['_users']){
+                CommonMethods.PopulateUsers($.parseJSON(sessionStorage['_users']));
+            } else {
+                AjaxCalls.GetUsers();
+            }
+        },
+        CleanUserForm: function() {
+            $('#addUserModalLabel').html('Add User');
+            $('#hdnUserId').val('');
+            $('#txtUserName').val('');
+            $('#txtEmail').val('');
+            $('#txtPassword').val('');
+            $('#chkAdmin')[0].checked = false;
+            $('#chkAuth')[0].checked = false;
+            $('#chkProctor')[0].checked = false;
+            $('#radActive').prop("checked", true);
+            $('#ug_UserName').removeClass('has-error has-success has-feedback');
+            $('#txtUserName').attr({placeholder: "User name"});
+            $('#ug_Email').removeClass('has-error has-success has-feedback');
+            $('#txtEmail').attr({placeholder: "Email Id"});
+            $('#ug_Password').removeClass('has-error has-success has-feedback');
+            $('#txtPassword').attr({placeholder: "Password"});
+            $('#ug_Role').removeClass('has-error has-success has-feedback');
+        },
+        PopulateUsers: function (Users) {
+            //var Users = $.parseJSON(sessionStorage['_users']);
+            $("#active_row").html('');
+            $("#inactive_row").html('');
+            var activecount = 0, inactivecount = 0;
+            for (var i = 0; i < Users.length; i++) {
+                var celldiv = $('<div>').addClass('col-xs-6 col-sm-4 col-md-3 col-lg-2');
+                var thumbnaildiv = $('<div>').addClass('user-thumbnail');
+                var imagespan = $('<span>').addClass('thumb-lg avatar m-l-lg m-t-sm m-b-sm').html('<img src=' + baseURL + '/img/' + Users[i].profilepic + '?' + new Date().getTime() + ' />');
+                var captiondiv = $('<div>').addClass('caption');
+                var captionh4 = $('<h4>').html(Users[i].firstname + ' ' + Users[i].lastname);
+                thumbnaildiv.append(imagespan);
+                thumbnaildiv.append(captiondiv.append(captionh4));
+
+                var useractiondiv = $('<div>').addClass('user-action hide');
+                var editspan = $('<span>').addClass('m-l-xs m-r-xs edit-user').attr({ "data-toggle": "tooltip", "data-placement": "top", title: "Edit", "user_id": Users[i].id })
+                            .html('<a onclick="return false;" data-target="#addUserModal" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>');
+                var linkspan = $('<span>').addClass('m-l-xs m-r-xs link-user').attr({ "data-toggle": "tooltip", "data-placement": "top", title: "Assign tests", "user_id": Users[i].id })
+                            .html('<a onclick="return false;" data-target="#assignTestModal" data-toggle="modal"><i class="fa fa-link"></i></a>');
+                useractiondiv.append(editspan)
+                useractiondiv.append(linkspan)
+
+                thumbnaildiv.append(useractiondiv);
+                celldiv.append(thumbnaildiv);
+
+                if (Users[i].isenabled == 1) { // Active Users
+                    $("#active_row").append(celldiv);
+                    activecount += 1;
+                } else if (Users[i].isenabled == 0) { // Active Users
+                    $("#inactive_row").append(celldiv);
+                    inactivecount += 1;
+                }
+            }
+            $('#activebadge').html(activecount);
+            $('#inactivebadge').html(inactivecount);
+            $('[data-toggle="tooltip"]').tooltip();
+        },
+        ValidateUserForm: function () {
+            var result = true;
+            if($('#txtUserName').val().trim().length > 0){
+                $('#ug_UserName').removeClass('has-error has-feedback').addClass('has-success has-feedback');
+                $('#txtUserName').attr({placeholder: "User name"});
+            } else{
+                $('#ug_UserName').removeClass('has-success has-feedback').addClass('has-error has-feedback');
+                $('#txtUserName').val('').attr({placeholder: "Error! enter user name"});
+                result = false;
+            }
+            if($('#txtEmail').val().trim().length > 0){
+                var emailformat = @emailregex;
+                if (emailformat.test($('#txtEmail').val())) {                    
+                    $('#ug_Email').removeClass('has-error has-feedback').addClass('has-success has-feedback');
+                    $('#txtEmail').attr({placeholder: "Email Id"});
+                }
+                else{
+                    $('#ug_Email').removeClass('has-success has-feedback').addClass('has-error has-feedback');
+                    $('#txtEmail').val('').attr({placeholder: "Error! enter proper email id"});
+                    result = false;
+                }
+            } else{
+                $('#ug_Email').removeClass('has-success has-feedback').addClass('has-error has-feedback');
+                $('#txtEmail').val('').attr({placeholder: "Error! enter email id"});
+                result = false;
+            }   
+            if($('#hdnUserId').val().length == 0){ //Edit user        
+                if($('#txtPassword').val().trim().length > 0){
+                    $('#ug_Password').removeClass('has-error has-feedback').addClass('has-success has-feedback');
+                    $('#txtPassword').attr({placeholder: "Password"});
+                } else{
+                    $('#ug_Password').removeClass('has-success has-feedback').addClass('has-error has-feedback');
+                    $('#txtPassword').val('').attr({placeholder: "Error! enter password"});
+                    result = false;
+                }
+            }
+            if ($('#chkAdmin').is(":checked") || $('#chkAuth').is(":checked") || $('#chkProctor').is(":checked")) {
+                $('#ug_Role').removeClass('has-error').addClass('has-success');
+            }else{
+                $('#ug_Role').addClass('has-error').removeClass('has-success');
+                result = false;
+            }
+            return result;
+        },
+        CleanAssignTestForm: function() {
+            $('.select-entity').removeClass('entity-selected');
+            $('#hdnUserId_assigntest').val('');
+        },
+        PopulateTests: function (TestsJson,assigntests) {
+            $("#div_tests").html('');
+            var assignedTests = assigntests.split(',');
+            var celldiv = null, thumbnaildiv = null, testnamespan = null, actionspan = null, activatespan = null;
+            for (var i = 0; i < TestsJson.length; i++) {
+                celldiv = $('<div>').addClass('col-xs-6 col-sm-4');
+                thumbnaildiv = $('<div>').addClass(CommonMethods.IsItemExits(TestsJson[i].id, assignedTests) ? 'thumbnail bg-testlist cursor-pointer select-entity entity-selected' : 'thumbnail bg-testlist cursor-pointer select-entity').attr({"testid": TestsJson[i].id });
+                testnamespan = $('<span>').addClass('vertical-align-top').html(TestsJson[i].name);
+                thumbnaildiv.append(testnamespan);
+                celldiv.append(thumbnaildiv);
+                $("#div_tests").append(celldiv);
+            }
+        },
+        IsItemExits: function(item, array){
+            var result = false;
+            for(var i = 0; i < array.length; i++){
+                if(item == array[i]){
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+
+    };
+    /************************************************* CommonMethods [Ends], SortFilter [Start] *************************************************************/
+    var SortFilter = {
+        SortUserAsc: function() {
+            $('#sort_user_asc').on('click', function(){
+                var Users = $.parseJSON(sessionStorage['_users']);
+                SortFilter.SortJson(Users,'firstname',true);
+                CommonMethods.PopulateUsers(Users);
+            });
+        },
+        SortUserDesc: function() {
+            $('#sort_user_desc').on('click', function(){
+                var Users = $.parseJSON(sessionStorage['_users']);
+                SortFilter.SortJson(Users,'firstname',false);
+                CommonMethods.PopulateUsers(Users);
+            });
+        },
+        FilterAdminUser: function() {
+            $('#filter-admin-user').on('click', function(){
+                var Users = $.parseJSON(sessionStorage['_users']);
+                Users = SortFilter.FilterJson(Users,'role',@Adminrole);
+                CommonMethods.PopulateUsers(Users);
+            });
+        },
+        FilterProctorUser: function() {
+            $('#filter-proctor-user').on('click', function(){
+                var Users = $.parseJSON(sessionStorage['_users']);
+                Users = SortFilter.FilterJson(Users,'role',@Proctorrole);
+                CommonMethods.PopulateUsers(Users);
+            });
+        },
+        FilterAuthUser: function() {
+            $('#filter-auth-user').on('click', function(){
+                var Users = $.parseJSON(sessionStorage['_users']);
+                Users = SortFilter.FilterJson(Users,'role',@Authrole);
+                CommonMethods.PopulateUsers(Users);
+            });
+        },
+        FilterAllUser: function() {
+            $('#filter-all-user').on('click', function(){
+                CommonMethods.PopulateUsers($.parseJSON(sessionStorage['_users']));
+            });
+        },
+        UserFilterByText: function() {
+            $('#txtFilterUser').on('change keyup paste', function(){
+                var value = $(this).val();
+                if(value.length > 0){
+                    var Users = $.parseJSON(sessionStorage['_users']);
+                    var filtered = [];
+                    for(var i = 0; i < Users.length; i++){
+                        if(Users[i].firstname.toLowerCase().match(value)){
+                            filtered.push(Users[i]);
+                        }
+                    }
+                    CommonMethods.PopulateUsers(filtered);
+                } else if(value.length == 0) {
+                    CommonMethods.PopulateUsers($.parseJSON(sessionStorage['_users']));
+                }
+            });
+        },
+        SortJson: function(json_object, key_to_sort_by, is_asc){
+            function sortByKey(a, b) {
+                var x = a[key_to_sort_by];
+                var y = b[key_to_sort_by];
+                if(is_asc){
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                } else {
+                    return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+                }
+            }
+            json_object.sort(sortByKey);
+        },
+        FilterJson: function(json_object, key_to_filter_by, filter_value){
+            var tempjson = [];
+            json_object.forEach(function(result, index) {
+                if((result[key_to_filter_by] & filter_value) == filter_value) {
+                    //Remove from array
+                    //json_object.splice(index, 1);
+                    tempjson.push(result);
+                }    
+            });
+            return tempjson;
+        }
+    };
+    /************************************************* SortFilter [Ends], AjaxCalls [Start] *************************************************************/
+    var AjaxCalls = {
+        GetUsers: function () {
+            var postData = "{ }";
+            $.ajax({
+                url: apiurl + "Account/GetUsers",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: JSON.stringify(postData),
+                contentType: "application/json",
+                success: function (data) {
+                    //var response = $.parseJSON(data);
+                    sessionStorage.setItem('_users', data.body);
+                    CommonMethods.PopulateUsers($.parseJSON(data.body));
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    e = $.parseJSON(xhr.responseText);
+                    alert(e.message);
+                }
+            });
+        },
+        SaveUser: function () {
+            var postData = {};
+            if ($('#hdnUserId').val() != '') {
+                postData.id = $('#hdnUserId').val();
+            } else {
+                postData.userid = $('#txtEmail').val();
+            }
+
+            postData.firstname = $('#txtUserName').val();
+            postData.emailid = $('#txtEmail').val();
+            if ($('#txtPassword').val().length > 0) {
+                postData.password = $('#txtPassword').val();
+            }
+            postData.usertypeid = 1;
+            var roles = '';
+            if ($('#chkAdmin').is(":checked")) {
+                roles += '2,';
+            }
+            if ($('#chkAuth').is(":checked")) {
+                roles += '3,';
+            }
+            if ($('#chkProctor').is(":checked")) {
+                roles += '4,';
+            }
+            if (roles.length > 0) {
+                postData.roles = roles.substring(0, (roles.length - 1));
+            }
+            if ($('#radActive').is(":checked")) {
+                postData.isenabled = 1;
+            } else {
+                postData.isenabled = 0;
+            }
+
+            $.ajax({
+                url: apiurl + "Account/SaveUser",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: "=" + JSON.stringify(postData),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    AjaxCalls.GetUsers();
+                    $('#addUserModal').modal('hide');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var e = $.parseJSON(xhr.responseText);
+                    alert(e.message);
+                }
+            });
+        },
+        GetTests: function (assigntests) {
+            var postData = {};
+                postData.isactive = 1;
+            $.ajax({
+                url: apiurl + "SyncUtility/GetTests",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: "=" + JSON.stringify(postData),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    //var response = $.parseJSON(data);
+                    sessionStorage.setItem('_activetests', data.body);
+                    CommonMethods.PopulateTests($.parseJSON(data.body),assigntests);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var e = $.parseJSON(xhr.responseText);
+                    alert(e.message);
+                }
+            });
+        },
+        AssignTest: function(testids) {
+            var userid = $('#hdnUserId_assigntest').val();
+            var postData = {};
+                postData.userid = userid;
+                postData.testids = testids;
+            $.ajax({
+                url: apiurl + "Account/AssignUserTest",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: "=" + JSON.stringify(postData),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    if(data.body.toLowerCase() == 'true'){
+                        var Users = $.parseJSON(sessionStorage['_users']);
+                        for(var i = 0; i< Users.length; i++){
+                            if(Users[i].id == userid){
+                                Users[i].assigntests = testids;
+                                break;
+                            }
+                        }
+                        sessionStorage.setItem('_users', JSON.stringify(Users));
+                    }
+                    $('#assignTestModal').modal('hide');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var e = $.parseJSON(xhr.responseText);
+                    alert(e.message);
+                }
+            });
+
+        }
+    };
+    /************************************************* AjaxCalls [Ends], UIEvents [Start] *************************************************************/
+    var UIEvents = {
+        TogglePassword: function(){
+            $('.view-password').on('mousedown', function () {
+                if ($('#txtPassword').val().length > 0) {
+                    $('#txtPassword').attr('type', 'text');
+                    $('.view-password').addClass('hide-pass');
+                    $('.eye-closed').removeClass('hide');
+                    $('.eye-open').addClass('hide');
+                }
+            }).on('mouseup', function () {
+                if ($('#txtPassword').val().length > 0) {
+                    $('#txtPassword').attr('type', 'password');
+                    $('.view-password').removeClass('hide-pass');
+                    $('.eye-closed').addClass('hide');
+                    $('.eye-open').removeClass('hide');
+                }
+            });
+        },
+        ToggleUserThumbnailButtons: function(){
+            $('.tab-pane').on('mouseover', '.user-thumbnail', function () {
+                var actions = $(this).children('.user-action');
+                if ($(actions).hasClass("user-action")) {
+                    $(actions).removeClass('hide').addClass("action-buttons");
+                }
+            });
+            $('.tab-pane').on('mouseout', '.user-thumbnail', function () {
+                var actions = $(this).children('.user-action');
+                if ($(actions).hasClass("action-buttons")) {
+                    $(actions).addClass('hide').removeClass("action-buttons");
+                }
+            });
+        },
+        PopulateEditUser: function(){
+            $('.tab-pane').on('click', '.edit-user', function () {
+                var userid = $(this).attr('user_id');
+                var Users = $.parseJSON(sessionStorage['_users']);
+                $.each(Users, function (index, user) {
+                    if (user.id == userid) {
+                        CommonMethods.CleanUserForm();
+                        $('#addUserModalLabel').html('Update User');
+                        $('#lblPassword').removeClass('required-star');
+                        $('#hdnUserId').val(user.id);
+                        $('#txtUserName').val(user.firstname);
+                        $('#txtEmail').val(user.emailid);
+                        $('#txtPassword').val('');
+                        if ((user.role & @Adminrole) == @Adminrole) {
+                            $('#chkAdmin')[0].checked = true;
+                        } else {
+                            $('#chkAdmin')[0].checked = false;
+                        }
+                        if ((user.role & @Authrole) == @Authrole) {
+                            $('#chkAuth')[0].checked = true;
+                        } else {
+                            $('#chkAuth')[0].checked = false;
+                        }
+                        if ((user.role & @Proctorrole) == @Proctorrole) {
+                            $('#chkProctor')[0].checked = true;
+                        } else {
+                            $('#chkProctor')[0].checked = false;
+                        }
+                        if (user.isenabled == 1) {
+                            $('#radActive').prop("checked", true);
+                        } else {
+                            $('#radInactive').prop("checked", true);
+                        }
+                        return false;
+                    }
+                });
+            });
+        },
+        PopulateUserTestAssociation: function(){
+            $('.tab-pane').on('click', '.link-user', function () {
+                var userid = $(this).attr('user_id');
+                CommonMethods.CleanAssignTestForm();
+                $('#hdnUserId_assigntest').val(userid);
+                var assigntests = '';
+                var users = $.parseJSON(sessionStorage['_users']);
+                for(var i = 0; i < users.length; i++){
+                    if(users[i].id == userid){
+                        assigntests = users[i].assigntests;
+                        break;
+                    }
+                }
+                if(sessionStorage['_activetests']){                    
+                    CommonMethods.PopulateTests($.parseJSON(sessionStorage['_activetests']),assigntests);
+                } else {
+                    AjaxCalls.GetTests(assigntests);
+                }
+            });
+        },
+        CleanUserSaveModel: function(){
+            $('#btn_addusermodel').on('click', function () {
+                $('#addUserModalLabel').html('Add User');
+                CommonMethods.CleanUserForm();
+            });
+        },
+        SaveUser: function(){
+            $('#btn_saveuser').on('click', function () {
+                if(CommonMethods.ValidateUserForm()){
+                    AjaxCalls.SaveUser();
+                }
+            });
+        },
+        SelectAssignTest: function(){
+            $('#div_tests').on('click','.select-entity', function () {
+                if ($(this).hasClass('entity-selected')) {
+                    $(this).removeClass('entity-selected');
+                }
+                else {
+                    $(this).addClass('entity-selected');
+                }
+            });
+        },
+        AssignTest: function(){
+            $('#btn_assigntest').on('click', function(){
+                var selectedTests = $('.entity-selected');
+                var testids = [];
+                $.each(selectedTests, function (index, test) {
+                    testids.push($(test).attr('testid'));
+                });
+                testids = testids.join();
+                AjaxCalls.AssignTest(testids);
+            });            
+        }
+    };
+    /************************************************* UIEvents [ends] *************************************************************/
+})();
+</script>
+}

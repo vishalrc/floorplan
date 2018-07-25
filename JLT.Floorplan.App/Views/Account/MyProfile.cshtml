@@ -1,0 +1,212 @@
+﻿@using com.JLT.Common.Utility;
+@using com.JLT.Entity;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var profilepic = CommonUtility.LoggedInUser.profilepic;
+    var userid = CommonUtility.LoggedInUser.id;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+}
+
+<div class="wrapper-md">
+
+<!-- Nav tabs -->
+    <ul class="nav nav-tabs m-t" role="tablist">
+        <li role="presentation" class="active"><a href="#UpdatePersonalInfo" aria-controls="UpdatePersonalInfo" role="tab" data-toggle="tab">Update Personal Info</a></li>
+        <li role="presentation"><a href="#changepassword" aria-controls="changepassword" role="tab" data-toggle="tab">Change Password</a></li>
+        <li role="presentation"><a href="#changeprofilepic" aria-controls="changeprofilepic" role="tab" data-toggle="tab">Update Profile Pic</a></li>
+        <li role="presentation"><a href="#assignedtests" aria-controls="assignedtests" role="tab" data-toggle="tab">View Assigned Seat</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="UpdatePersonalInfo">            
+            
+        </div>
+        <div role="tabpanel" class="tab-pane" id="changepassword">            
+            
+        </div>
+        <div role="tabpanel" class="tab-pane" id="changeprofilepic">
+            <div class="row m-t">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="thumbnail thumbnail-photo-click">
+                        <video class="video-photo-click" id="video-photo" autoplay></video>
+                        <canvas id="Canvas-photo" style="display:none;"></canvas>
+                        <canvas id="Canvas-final-photo" style="display:none;"></canvas>
+                        <a id="btn-photo-click" class="btn btn-primary btn-lg click-btn-center" href="#" role="button">Click</a>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="thumbnail thumbnail-photo-click">
+                        <img id="img_photo" src="@Url.Content("~/img/" + profilepic)"/>
+                        <a id="btn-photo-upload" class="btn btn-primary btn-lg m-t-xs click-btn-center disabled" href="#" role="button">Upload</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="assignedtests">            
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+(function () {
+    "use strict";
+    var video_photo = null,
+        ctx_photo = null,
+        Canvas_photo = null,
+        Canvas_final_photo = null,
+        img_photo = null,
+        flag_photo_clicked = false,
+        apiurl = '@RestAPI',
+        baseURL = '@Url.Action("Index","Home")',
+        peer_connection = null, //rtc_peer_connection object
+        signaling_server = null, // signaling server for this call
+        webrtc_capable = true,
+        get_user_media = null,
+        connect_stream_to_src = null,
+        localMediaStream = null;
+    /************************************************* document.ready [Start] *************************************************************/
+    $(document).ready(function () {
+        CommonMethods.Init();
+        CommonMethods.ClickPhoto();
+        CommonMethods.UploadPhoto();
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if(e.target.hash === "#changeprofilepic"){
+                CommonMethods.InitWebCam();
+            }
+        })
+    });
+
+    /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+    var CommonMethods = {
+        Init: function () {
+            video_photo = document.getElementById("video-photo");
+            Canvas_photo = document.getElementById("Canvas-photo");
+            Canvas_final_photo = document.getElementById("Canvas-final-photo");
+            Canvas_photo.width = 320;
+            Canvas_photo.height = 240;
+            Canvas_final_photo.width = 240;
+            Canvas_final_photo.height = 240;
+            img_photo = document.getElementById("img_photo");
+
+        }, //Init Ends
+        InitWebCam: function () {
+            get_user_media(
+                {
+                    "audio": false, // request access to local microphone
+                    "video": true  // request access to local camera
+                },
+                function (local_stream) { // success callback
+                    console.log("new local stream added");
+                    localMediaStream = local_stream;
+                    connect_stream_to_src(localMediaStream, video_photo);
+                },
+                CommonMethods.LogError
+            );
+        },
+        LogError: function (error) {
+            console.log(error);
+        },
+        ClickPhoto: function () {
+            $('#btn-photo-click').click(function () {
+                if (localMediaStream) {
+                    ctx_photo = Canvas_photo.getContext('2d');
+                    ctx_photo.drawImage(video_photo, 0, 0, 320, 240);
+                    img_photo.src = Canvas_photo.toDataURL('image/webp');  
+                    ctx_photo = Canvas_final_photo.getContext('2d');                  
+                    ctx_photo.drawImage(img_photo,40,0,240,240, 0, 0, 240, 240);
+                    img_photo.src =Canvas_final_photo.toDataURL('image/webp');
+                    flag_photo_clicked = true;
+                    $('#btn-photo-upload').removeClass("disabled");
+                }
+            });
+        },
+        UploadPhoto: function () {
+            $('#btn-photo-upload').click(function () {
+                if (flag_photo_clicked === true) {
+                    $('#btn-photo-upload').addClass("disabled"); 
+                    var ImageData = Canvas_final_photo.toDataURL("image/png");
+                    ImageData = ImageData.replace('data:image/png;base64,', '');
+
+                    var formJson = {};
+                    formJson.Userid = @userid;
+                    formJson.ImageData = ImageData;
+                    formJson.ImageType = 'Photo';
+                    var p_data = JSON.stringify(formJson);
+                    $.ajax({
+                        url: baseURL + 'Account/SaveImage',
+                        type: 'Post',
+                        data: p_data,
+                        async: false,
+                        crossDomain: true,
+                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            var res = JSON.parse(data);
+                            if(res.success === "true"){                               
+                                alert("Photo uploaded!");
+                            }
+                            var profilepic = "P_" + @userid + ".png";
+                            if('@profilepic' !== profilepic){
+                                var postData = {};
+                                postData.id = @userid;
+                                postData.profilepic = profilepic;
+                                CommonMethods.SaveUserProfile(postData);
+                            }//if ends
+                        },
+                        error: function (jqHXR, textStatus, errorThrown) {
+
+                        }
+                    })//Ajax call ends
+                }
+            });//button Click ends
+        },
+        SaveUserProfile: function(UserJson){
+            $.ajax({
+                url: apiurl + "Account/SaveUser",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: "=" + JSON.stringify(UserJson),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var e = $.parseJSON(xhr.responseText);
+                    //alert(e.message);
+                }
+            });//Save User Ajax ends
+        }
+    };
+    /************************************************* CommonMethods [End], Browser_Specific_Code [Start] *************************************************************/
+    if (navigator.getUserMedia) { // WebRTC 1.0 standard compliant browser
+        get_user_media = navigator.getUserMedia.bind(navigator);
+        connect_stream_to_src = function (media_stream, media_element) {
+            // https://www.w3.org/Bugs/Public/show_bug.cgi?id=21606
+            media_element.srcObject = media_stream;
+            media_element.play();
+        };
+    } else if (navigator.mozGetUserMedia) { // early firefox webrtc implementation
+        get_user_media = navigator.mozGetUserMedia.bind(navigator);
+        connect_stream_to_src = function (media_stream, media_element) {
+            media_element.mozSrcObject = media_stream;
+            media_element.play();
+        };
+    } else if (navigator.webkitGetUserMedia) { // early webkit webrtc implementation
+        get_user_media = navigator.webkitGetUserMedia.bind(navigator);
+        connect_stream_to_src = function (media_stream, media_element) {
+            media_element.src = window.URL.createObjectURL(media_stream);
+            media_element.play();
+        };
+    } else {
+        alert("This browser does not support WebRTC - visit WebRTC.org for more info");
+        webrtc_capable = false;
+    }
+})();
+</script>
+}

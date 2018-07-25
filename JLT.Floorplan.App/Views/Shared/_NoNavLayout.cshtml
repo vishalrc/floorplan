@@ -1,0 +1,58 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Examonline | @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/animate.css/animate.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/font-awesome/css/font-awesome.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/simple-line-icons/css/simple-line-icons.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/jquery/bootstrap/dist/css/bootstrap.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/font.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/app.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/bootstrap-datetimepicker.css")" type="text/css" />
+    <script src="@Url.Content("~/libs/jquery/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/libs/jquery/moment/moment.js")"></script>
+    <script src="@Url.Content("~/js/bootstrap-datetimepicker.js")"></script>  @*https://eonasdan.github.io/bootstrap-datetimepicker/*@
+    <script src="@Url.Content("~/js/tracking-min.js")"></script>
+    <script src="@Url.Content("~/js/face-min.js")"></script>
+    <script>
+        $(document).ready(function () {
+            $(".app").toggleClass("app-aside-folded", 10);
+
+        });
+    </script>
+</head>
+<body>
+    <div class="app app-header-fixed-examinee  ">
+        <!-- header -->
+        
+        <!-- / header -->
+
+        <!-- content -->
+        <div id="content" class="app-content" role="main">
+            <div class="app-content-body ">
+                <!-- Body Content Goes Here -->
+                @RenderBody()
+            </div>
+        </div>
+        <!-- / content -->
+        <!-- footer -->
+        <footer id="footer" class="app-footer" role="footer">
+        <div class="wrapper b-t bg-light">
+      <span class="pull-right">2.0.2 <a  ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
+    	&copy; 2018 www.jlt.com
+    </div>
+  </footer>
+        <!-- / footer -->
+    </div>
+    <script src="@Url.Content("~/libs/jquery/bootstrap/dist/js/bootstrap.js")"></script>
+    <script src="@Url.Content("~/js/ui-load.js")"></script>
+    <script src="@Url.Content("~/js/ui-jp.config.js")"></script>
+    <script src="@Url.Content("~/js/ui-jp.js")"></script>
+    <script src="@Url.Content("~/js/ui-nav.js")"></script>
+    <script src="@Url.Content("~/js/ui-toggle.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,220 @@
+﻿@using com.JLT.Common.Utility;
+@using com.JLT.Entity;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+    var ExamEngineAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.TestEngineAPIurl);
+}
+
+<div class="wrapper-md">
+    <div>
+        <button type="button" class="btn m-b-xs btn-sm btn-primary btn-addon" id="btn_syncemployee"><i class="fa fa-download"></i>Sync Leave</button>
+    </div>
+    <div class="panel panel-primary">
+
+        <div class="panel-heading">Manage Leave</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="action-ribbon">
+                    <span class="action-button" id="sort_test_asc" data-toggle="tooltip" data-placement="top" title="Sort by name ascending"><i class="fa fa-sort-alpha-asc"></i></span>
+                    <span class="action-button" id="sort_test_desc" data-toggle="tooltip" data-placement="top" title="Sort by name descending"><i class="fa fa-sort-alpha-desc"></i></span>
+                    <input type="text" class="filter-user-text" id="txtFilterEmployee" placeholder="Filter by employee" />
+                </div>
+            </div>
+            <div class="row m-t" id="div_leave">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    (function () {
+        "use strict";
+        var apiurl = '@RestAPI',
+        baseURL = '@Url.Action("Index","Home")';
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(document).ready(function () {
+            UIEvents.SelectAssignTest();
+            UIEvents.SyncExaminee();
+            CommonMethods.Init();
+            SortFilter.TestFilterByText();
+            SortFilter.SortTestAsc();
+            SortFilter.SortTestDesc();
+        });
+        /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+        var CommonMethods = {
+            Init: function () {
+                if (sessionStorage['_activetests']) {
+                    CommonMethods.PopulateTests($.parseJSON(sessionStorage['_activetests']));
+                } else {
+                    AjaxCalls.GetTests();
+                }
+            },
+            PopulateTests: function (TestsJson, assigntests) {
+                $("#div_leave").html('');
+                var celldiv = null, thumbnaildiv = null, testnamespan = null, actionspan = null, activatespan = null;
+                for (var i = 0; i < TestsJson.length; i++) {
+                    celldiv = $('<div>').addClass('col-xs-6 col-sm-4 col-md-3 col-lg-2');
+                    thumbnaildiv = $('<div>').addClass('thumbnail bg-testlist cursor-pointer select-entity').attr({ "testid": TestsJson[i].id, "examenginetestid": TestsJson[i].examenginetestid });
+                    testnamespan = $('<span>').addClass('vertical-align-top').html(TestsJson[i].name);
+                    thumbnaildiv.append(testnamespan);
+                    celldiv.append(thumbnaildiv);
+                    $("#div_leave").append(celldiv);
+                }
+            }
+        };
+        /************************************************* CommonMethods [End], AjaxCalls [Start] *************************************************************/
+        var AjaxCalls = {
+            GetTests: function () {
+                var postData = {};
+                postData.isactive = 1;
+                $.ajax({
+                    url: apiurl + "SyncUtility/GetEmployee",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(postData),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        //var response = $.parseJSON(data);
+                        sessionStorage.setItem('_activetests', data.body);
+                        CommonMethods.PopulateTests($.parseJSON(data.body));
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        alert(e.message);
+                    }
+                });
+            },
+            SyncExaminee: function (testids) {
+                $.ajax({
+                    url: '@ExamEngineAPI' + "Proctor/SyncExamine?testids=" + testids,
+                    type: "GET",
+                    async: true,
+                    crossDomain: true,
+                    //beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + ''); },
+                    datatype: "json",
+                    data: "",
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        var testList = [];
+                        if (data) {
+                            if (data.length > 0) {
+                                AjaxCalls.SaveSyncExamineeData(data);
+                            }
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SyncExaminee Ajax ends
+            },
+            SaveSyncExamineeData: function (lstExaminee) {
+                $.ajax({
+                    url: apiurl + "SyncUtility/SyncExamine",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(lstExaminee),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        alert(data.body + " examines synced");
+                        $('.select-entity').removeClass('entity-selected');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SaveSyncExamineeData Ajax ends
+            }
+        };
+        /************************************************* AjaxCalls [End], UIEvents [Start] *************************************************************/
+        var UIEvents = {
+            SelectAssignTest: function () {
+                $('#div_leave').on('click', '.select-entity', function () {
+                    if ($(this).hasClass('entity-selected')) {
+                        $(this).removeClass('entity-selected');
+                    }
+                    else {
+                        $(this).addClass('entity-selected');
+                    }
+                });
+            },
+            SyncExaminee: function () {
+                $('#btn_syncemployee').on('click', function () {
+                    var selectedTests = $('.entity-selected');
+                    if (selectedTests.length > 0) {
+                        var testids = [];
+                        $.each(selectedTests, function (index, test) {
+                            testids.push($(test).attr('examenginetestid'));
+                        });
+                        testids = testids.join(); //comma seperated testids
+                        AjaxCalls.SyncExaminee(testids);
+                    } else {
+                        alert('Select tests to sync examine');
+                    }
+                });
+            }
+        };
+        /************************************************* UIEvents [Ends], SortFilter [Starts] *************************************************************/
+        var SortFilter = {
+            SortTestAsc: function () {
+                $('#sort_test_asc').on('click', function () {
+                    var Tests = $.parseJSON(sessionStorage['_activetests']);
+                    SortFilter.SortJson(Tests, 'name', true);
+                    CommonMethods.PopulateTests(Tests);
+                });
+            },
+            SortTestDesc: function () {
+                $('#sort_test_desc').on('click', function () {
+                    var Tests = $.parseJSON(sessionStorage['_activetests']);
+                    SortFilter.SortJson(Tests, 'name', false);
+                    CommonMethods.PopulateTests(Tests);
+                });
+            },
+            TestFilterByText: function () {
+                $('#txtFilterEmployee').on('change keyup paste', function () {
+                    var value = $(this).val();
+                    if (value.length > 0) {
+                        var Tests = $.parseJSON(sessionStorage['_activetests']);
+                        var filtered = [];
+                        for (var i = 0; i < Tests.length; i++) {
+                            if (Tests[i].name.toLowerCase().match(value)) {
+                                filtered.push(Tests[i]);
+                            }
+                        }
+                        CommonMethods.PopulateTests(filtered);
+                    } else if (value.length == 0) {
+                        CommonMethods.PopulateTests($.parseJSON(sessionStorage['_activetests']));
+                    }
+                });
+            },
+            SortJson: function (json_object, key_to_sort_by, is_asc) {
+                function sortByKey(a, b) {
+                    var x = a[key_to_sort_by];
+                    var y = b[key_to_sort_by];
+                    if (is_asc) {
+                        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                    } else {
+                        return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+                    }
+                }
+                json_object.sort(sortByKey);
+            }
+        };
+        /************************************************* SortFilter [Ends] *************************************************************/
+    })();
+    
+</script>
+}

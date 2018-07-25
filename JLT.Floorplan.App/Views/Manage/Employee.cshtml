@@ -1,0 +1,274 @@
+﻿@using com.JLT.Common.Utility;
+@using com.JLT.Entity;
+@{    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+    var ExamEngineAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.TestEngineAPIurl);
+}
+
+<div class="wrapper-md">
+    <button type="button" id="btnSyncEmployee" class="btn m-b-xs btn-sm btn-primary btn-addon"><i class="fa fa-download"></i>Sync Employee</button>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs m-t" role="tablist">
+        <li role="presentation" class="active"><a href="#active" aria-controls="active" role="tab"
+            data-toggle="tab">All Employee<span class="badge progress-bar-info" id="activebadge">0</span></a></li>
+        <li role="presentation"><a href="#inactive" aria-controls="inactive" role="tab" data-toggle="tab">
+            Absent Employee <span class="badge progress-bar-info" id="inactivebadge">0</span></a></li>
+    </ul>
+     <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="active">
+            <div class="row m-t" id="active_row">
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="inactive">
+            <div class="row m-t" id="inactive_row">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        var apiurl = '@RestAPI',
+        baseURL = '@Url.Action("Index","Home")';
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(document).ready(function () {
+            CommonMethods.Init();
+            UIEvents.ActivateTest();
+            UIEvents.ArchiveTest();
+            UIEvents.DeleteTest();
+            UIEvents.SyncTest();
+
+        });
+        /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+        var CommonMethods = {
+            Init: function () {
+                if (sessionStorage['_tests']) {
+                    CommonMethods.PopulateTests($.parseJSON(sessionStorage['_tests']));
+                } else {
+                    AjaxCalls.GetTests();
+                }
+            },
+            PopulateTests: function (TestsJson) {
+                $("#active_row").html('');
+                $("#inactive_row").html('');
+                var activecount = 0, inactivecount = 0, celldiv = null, thumbnaildiv = null, testnamespan = null, actionspan = null, activatespan = null;
+                for (var i = 0; i < TestsJson.length; i++) {
+                    celldiv = $('<div>').addClass('col-xs-6 col-md-3');
+                    thumbnaildiv = $('<div>').addClass('thumbnail bg-testlist');
+                    testnamespan = $('<span>').html(TestsJson[i].name);
+                    thumbnaildiv.append(testnamespan);
+                    if (TestsJson[i].isactive == 1) {
+                        actionspan = $('<span>').addClass('fr cursor-pointer archive-test').attr({ "data-toggle": "tooltip", "title": "archive", "testid": TestsJson[i].id }).html('<i class="fa fa-archive"></i>');
+                        thumbnaildiv.append(actionspan);
+                        celldiv.append(thumbnaildiv);
+                        $("#active_row").append(celldiv);
+                        activecount += 1;
+                    } else if (TestsJson[i].isactive == 0) {
+                        actionspan = $('<span>').addClass('fr cursor-pointer delete-test m-l-xs').attr({ "data-toggle": "tooltip", "title": "delete", "testid": TestsJson[i].id }).html('<i class="fa fa-trash"></i>');
+                        activatespan = $('<span>').addClass('fr cursor-pointer activate-test').attr({ "data-toggle": "tooltip", "title": "activate", "testid": TestsJson[i].id }).html('<i class="fa fa-reply"></i>');
+                        thumbnaildiv.append(actionspan);
+                        thumbnaildiv.append(activatespan);
+                        celldiv.append(thumbnaildiv);
+                        $("#inactive_row").append(celldiv);
+                        inactivecount += 1;
+                    }
+                }
+                $('#activebadge').html(activecount);
+                $('#inactivebadge').html(inactivecount);
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        };
+        /************************************************* CommonMethods [Ends], AjaxCalls [Start] *************************************************************/
+        var AjaxCalls = {
+            GetTests: function () {
+                var postData = "{ }";
+                $.ajax({
+                    url: apiurl + "SyncUtility/GetTests",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: JSON.stringify(postData),
+                    contentType: "application/json",
+                    success: function (data) {
+                        //var response = $.parseJSON(data);
+                        sessionStorage.setItem('_tests', data.body);
+                        CommonMethods.PopulateTests($.parseJSON(data.body));
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        e = $.parseJSON(xhr.responseText);
+                        alert(e.message);
+                    }
+                });
+            },
+            UpdateTestStatus: function (postData) {
+                $.ajax({
+                    url: apiurl + "SyncUtility/UpdateTestStatus",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(postData),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //UpdateTestStatus Ajax ends
+            },
+            SyncTest: function () {
+                $.ajax({
+                    url: '@ExamEngineAPI' + "Proctor/SyncTest",
+                    type: "GET",
+                    async: true,
+                    crossDomain: true,
+                    //beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + ''); },
+                    datatype: "json",
+                    data: "",
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        var testList = [];
+                        if (data) {
+                            if (data.length > 0) {
+                                for (var i = 0; i < data.length; i++) {
+                                    testList.push({ "examenginetestid": data[i].id, "name": data[i].name });
+                                }
+                                AjaxCalls.SaveSyncTestData(testList);
+                            }
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SyncTest Ajax ends
+            },
+            SaveSyncTestData: function (testList) {
+                $.ajax({
+                    url: apiurl + "SyncUtility/SyncTest",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(testList),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        AjaxCalls.GetTests();
+                        sessionStorage.removeItem('_activetests');
+                        alert(data.body + " tests synced");
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SaveSyncTestData Ajax ends
+            }
+        };
+        /************************************************* AjaxCalls [Ends], UIEvents [Start] *************************************************************/
+        var UIEvents = {
+            SyncTest: function () {
+                $('#btnSyncEmployee').on('click', function () {
+                    AjaxCalls.SyncTest();
+                });
+            },
+            ArchiveTest: function () {
+                $("#active_row").on('click', '.archive-test', function () {
+                    var testid = $(this).attr('testid');
+                    var postdata = {};
+                    postdata.id = testid;
+                    postdata.isactive = 0;
+                    AjaxCalls.UpdateTestStatus(postdata);
+                    var Tests = $.parseJSON(sessionStorage['_tests']);
+                    for (var i = 0; i < Tests.length; i++) {
+                        if (Tests[i].id == testid) {
+                            Tests[i].isactive = 0;
+                            break;
+                        }
+                    }
+                    sessionStorage.setItem('_tests', JSON.stringify(Tests));
+                    CommonMethods.PopulateTests(Tests);
+                    Tests = null;
+                    if (sessionStorage['_activetests']) {
+                        var ActiveTests = $.parseJSON(sessionStorage['_activetests']);
+                        if (ActiveTests) {
+                            for (var i = 0; i < ActiveTests.length; i++) {
+                                if (ActiveTests[i].id == testid) {
+                                    ActiveTests.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            sessionStorage.setItem('_activetests', JSON.stringify(ActiveTests));
+                            ActiveTests = null;
+                        }
+                    }
+                });
+            },
+            DeleteTest: function () {
+                $("#inactive_row").on('click', '.delete-test', function () {
+                    if (confirm("Confirm test delete?")) {
+                        var testid = $(this).attr('testid');
+                        var postdata = {};
+                        postdata.id = testid;
+                        postdata.isactive = -1;
+                        AjaxCalls.UpdateTestStatus(postdata);
+                        var Tests = $.parseJSON(sessionStorage['_tests']);
+                        for (var i = 0; i < Tests.length; i++) {
+                            if (Tests[i].id == testid) {
+                                Tests[i].isactive = -1;
+                                break;
+                            }
+                        }
+                        sessionStorage.setItem('_tests', JSON.stringify(Tests));
+                        CommonMethods.PopulateTests(Tests);
+                        Tests = null;
+                    }
+                });
+            },
+            ActivateTest: function () {
+                $("#inactive_row").on('click', '.activate-test', function () {
+                    var testid = $(this).attr('testid');
+                    var postdata = {};
+                    postdata.id = testid;
+                    postdata.isactive = 1;
+                    AjaxCalls.UpdateTestStatus(postdata);
+                    var ActiveTests = null;
+                    if (sessionStorage['_activetests']) {
+                        ActiveTests = $.parseJSON(sessionStorage['_activetests']);
+                    }
+                    var Tests = $.parseJSON(sessionStorage['_tests']);
+                    for (var i = 0; i < Tests.length; i++) {
+                        if (Tests[i].id == testid) {
+                            Tests[i].isactive = 1;
+                            if (ActiveTests) {
+                                ActiveTests.push(Tests[i]);
+                                sessionStorage.setItem('_activetests', JSON.stringify(ActiveTests));
+                                ActiveTests = null;
+                            }
+                            break;
+                        }
+                    }
+                    sessionStorage.setItem('_tests', JSON.stringify(Tests));
+                    CommonMethods.PopulateTests(Tests);
+                    Tests = null;
+                });
+            }
+        };
+        /************************************************* UIEvents [Ends] *************************************************************/
+    })();
+    
+</script>
+}
