@@ -8,8 +8,6 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using JLT.Floorplan.Filters;
-using JLT.Floorplan.Models;
 using JLT.Floorplan.Entity;
 using JLT.Floorplan.RestClient;
 using JLT.Common.Utility;
