@@ -8,8 +8,8 @@
     <ProjectGuid>{61DC63C3-295A-4D22-AA90-285D63D2288A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>com.JLT.DAL</RootNamespace>
-    <AssemblyName>com.JLT.DAL</AssemblyName>
+    <RootNamespace>JLT.FLoorplan.DAL</RootNamespace>
+    <AssemblyName>JLT.FLoorplan.DAL</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

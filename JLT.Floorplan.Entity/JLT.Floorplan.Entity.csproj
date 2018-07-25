@@ -8,8 +8,8 @@
     <ProjectGuid>{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>com.JLT.Entity</RootNamespace>
-    <AssemblyName>com.JLT.Entity</AssemblyName>
+    <RootNamespace>JLT.FLoorplan.Entity</RootNamespace>
+    <AssemblyName>JLT.FLoorplan.Entity</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
