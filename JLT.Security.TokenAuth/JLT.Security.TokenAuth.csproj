@@ -46,10 +46,16 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,11 +70,11 @@
     <Compile Include="TokenService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\com.JLT.DataAccess\JLT.MySQL.DataAccess.csproj">
+    <ProjectReference Include="..\JLT.MySQL.DataAccess\JLT.MySql.DataAccess.csproj">
       <Project>{8465DAD5-D59B-4959-B3ED-E3E58584EC77}</Project>
-      <Name>JLT.MySQL.DataAccess</Name>
+      <Name>JLT.MySql.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.Entity\JLT.Floorplan.Entity.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.Entity\JLT.Floorplan.Entity.csproj">
       <Project>{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}</Project>
       <Name>JLT.Floorplan.Entity</Name>
     </ProjectReference>

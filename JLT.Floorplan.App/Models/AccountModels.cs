@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace com.JLT.eProctor.Models
+namespace JLT.Floorplan.Models
 {
     public class UsersContext : DbContext
     {

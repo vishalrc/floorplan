@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace com.JLT.Floorplan.Controllers
+namespace JLT.Floorplan.Controllers
 {
     public class FloorplanController : Controller
     {

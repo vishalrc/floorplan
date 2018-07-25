@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace com.JLT.Security.TokenAuth
+namespace JLT.Security.TokenAuth
 {
     [Serializable]
     public class SecurityTokenException : System.Exception

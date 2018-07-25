@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public static class CryptoUtility
     {

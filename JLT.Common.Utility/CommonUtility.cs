@@ -11,11 +11,10 @@ using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
-using com.JLT.Entity;
 using System.Web.Routing;
-using System.Web.Mvc;
+using JLT.Floorplan.Entity;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public static class CommonUtility
     {
@@ -33,8 +32,10 @@ namespace com.JLT.Common.Utility
         /// <returns></returns>
         public static List<Config> GetAppicationConfigCollection(Int32 appId, string ConfigNames)
         {
-            StringBuilder ConfigNameXML = new StringBuilder();
-            ConfigNameXML.Length = 0;
+            StringBuilder ConfigNameXML = new StringBuilder
+            {
+                Length = 0
+            };
             ConfigNameXML.Append("<CS>");
             string[] configNames = ConfigNames.Split('|');
             for (int i = 0; i < configNames.Length; i++)
@@ -146,7 +147,7 @@ namespace com.JLT.Common.Utility
             var objFieldNames = typeof(T).GetProperties(flags).Cast<PropertyInfo>().
                 Select(item => new
                 {
-                    Name = item.Name,
+                    item.Name,
                     Type = Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType
                 }).ToList();
 
@@ -174,7 +175,7 @@ namespace com.JLT.Common.Utility
                         if (propertyInfos.PropertyType == typeof(DateTime))
                         {
                             propertyInfos.SetValue
-                            (classObj, convertToDateTime(dataRow[dtField.Name]), null);
+                            (classObj, ConvertToDateTime(dataRow[dtField.Name]), null);
                         }
                         else if (propertyInfos.PropertyType == typeof(int))
                         {
@@ -299,7 +300,7 @@ namespace com.JLT.Common.Utility
                 return 0;
             return Convert.ToDecimal(value);
         }
-        public static DateTime convertToDateTime(object date)
+        public static DateTime ConvertToDateTime(object date)
         {
             if (date == null)
                 return DateTime.MinValue;
@@ -428,8 +429,10 @@ namespace com.JLT.Common.Utility
             //BarCode Generation --- Start
             if (!string.IsNullOrEmpty(barcodeText) && emailBody.Contains("$$BarCode$$"))
             {
-                var barcode = new BarcodeLib.Barcode();
-                barcode.IncludeLabel = true;
+                var barcode = new BarcodeLib.Barcode
+                {
+                    IncludeLabel = true
+                };
                 System.Drawing.Image img = barcode.Encode(BarcodeLib.TYPE.CODE128, barcodeText, Color.Black, Color.White, 200, 50);
                 var barCodefile = rootPath + "/Barcode/" + barcodeText + ".png";
                 barcode.SaveImage(barCodefile, BarcodeLib.SaveTypes.PNG);

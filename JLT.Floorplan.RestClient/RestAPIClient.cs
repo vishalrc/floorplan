@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 
-namespace com.JLT.RestClient
+namespace JLT.Floorplan.RestClient
 {
     public class RestAPIClient : IDisposable
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace com.JLT.RestAPI
+namespace JLT.Floorplan.RestAPI
 {
     public static class WebApiConfig
     {

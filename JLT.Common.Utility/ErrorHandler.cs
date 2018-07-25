@@ -1,7 +1,7 @@
 ﻿using Elmah;
 using System.Web.Mvc;
 using System;
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public class ErrorLoggerFilter : IExceptionFilter
     {
@@ -15,7 +15,7 @@ namespace com.JLT.Common.Utility
 
     public static class ErrorHandler
     {
-        public static void LogError(Exception ex, string message, com.JLT.Common.Utility.Enums.Severity severity)
+        public static void LogError(Exception ex, string message, JLT.Common.Utility.Enums.Severity severity)
         {
             ErrorSignal.FromCurrentContext().Raise(ex);
         }

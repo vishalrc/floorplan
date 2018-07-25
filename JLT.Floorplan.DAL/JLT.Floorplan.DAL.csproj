@@ -8,8 +8,8 @@
     <ProjectGuid>{61DC63C3-295A-4D22-AA90-285D63D2288A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JLT.FLoorplan.DAL</RootNamespace>
-    <AssemblyName>JLT.FLoorplan.DAL</AssemblyName>
+    <RootNamespace>JLT.Floorplan.DAL</RootNamespace>
+    <AssemblyName>JLT.Floorplan.DAL</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -63,11 +63,11 @@
     <Compile Include="SyncUtilityDAL.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\com.JLT.DataAccess\JLT.MySQL.DataAccess.csproj">
+    <ProjectReference Include="..\JLT.MySQL.DataAccess\JLT.MySql.DataAccess.csproj">
       <Project>{8465DAD5-D59B-4959-B3ED-E3E58584EC77}</Project>
-      <Name>JLT.MySQL.DataAccess</Name>
+      <Name>JLT.MySql.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.Entity\JLT.Floorplan.Entity.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.Entity\JLT.Floorplan.Entity.csproj">
       <Project>{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}</Project>
       <Name>JLT.Floorplan.Entity</Name>
     </ProjectReference>

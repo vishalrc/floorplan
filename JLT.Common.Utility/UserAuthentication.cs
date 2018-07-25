@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Security.Principal;
-using com.JLT.Entity;
+using JLT.Floorplan.Entity;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public class AuthenticationWebPlatformPrincipal : IPrincipal
     {
-        private IIdentity identity;
         private CurrentLogedInUser userData;
 
         public AuthenticationWebPlatformPrincipal(IIdentity identity, CurrentLogedInUser udata)
         {
-            this.identity = identity;
+            this.Identity = identity;
             this.userData = udata;
         }
 
@@ -25,10 +24,7 @@ namespace com.JLT.Common.Utility
 
         #region IPrincipal Members
 
-        public IIdentity Identity
-        {
-            get { return identity; }
-        }
+        public IIdentity Identity { get; }
 
         public bool IsInRole(string role)
         {

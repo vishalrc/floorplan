@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using com.JLT.Entity;
-using com.JLT.DataAccess;
+using JLT.Floorplan.Entity;
+using JLT.MySql.DataAccess;
 using MySql.Data.MySqlClient;
 using System.Data;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 using System.Globalization;
 
-namespace com.JLT.DAL
+namespace JLT.Floorplan.DAL
 {
     public class AccountDAL : IDisposable
     {

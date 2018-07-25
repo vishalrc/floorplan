@@ -8,15 +8,15 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using com.JLT.eProctor.Filters;
-using com.JLT.eProctor.Models;
-using com.JLT.Entity;
-using com.JLT.RestClient;
-using com.JLT.Common.Utility;
+using JLT.Floorplan.Filters;
+using JLT.Floorplan.Models;
+using JLT.Floorplan.Entity;
+using JLT.Floorplan.RestClient;
+using JLT.Common.Utility;
 using System.IO;
 
 
-namespace com.JLT.eProctor.Controllers
+namespace JLT.eProctor.Controllers
 {
     //[Authorize]
     //[InitializeSimpleMembership]
@@ -40,8 +40,10 @@ namespace com.JLT.eProctor.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(CurrentLogedInUser model, string returnUrl)
         {
-            var header = new System.Collections.Specialized.NameValueCollection();
-            header.Add("IsAdmin", "true");
+            var header = new System.Collections.Specialized.NameValueCollection
+            {
+                { "IsAdmin", "true" }
+            };
             using (var objApiClient = new RestAPIClient
             {
                 requestUriString = CommonUtility.GetAppSettingKey("RestServiceURL") + "security/obtainAuthToken",
@@ -58,7 +60,7 @@ namespace com.JLT.eProctor.Controllers
                 else
                 {
                     ViewBag.Title = "Login";
-                    ModelState.AddModelError("error_msg", apiResponse.message == null ? "Login failed. Please enter valid userid and password" : apiResponse.message);
+                    ModelState.AddModelError("error_msg", apiResponse.message ?? "Login failed. Please enter valid userid and password");
                     if (apiResponse.code == 1 || apiResponse.code == 2)
                     {
                         ViewBag.Error = apiResponse.message;
@@ -122,8 +124,10 @@ namespace com.JLT.eProctor.Controllers
         public ActionResult LogOff()
         {
             ViewBag.Title = "Logout";
-            var header = new System.Collections.Specialized.NameValueCollection();
-            header.Add("Authorization", "token " + CommonUtility.LoggedInUser.authtoken);
+            var header = new System.Collections.Specialized.NameValueCollection
+            {
+                { "Authorization", "token " + CommonUtility.LoggedInUser.authtoken }
+            };
             using (var objApiClient = new RestAPIClient
             {
                 requestUriString = CommonUtility.GetAppSettingKey("RestServiceURL") + "security/revokeAuthToken",
@@ -136,8 +140,10 @@ namespace com.JLT.eProctor.Controllers
                 ViewBag.Title = apiResponse.message;
                 FormsAuthentication.SignOut();
                 // clear authentication cookie
-                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName);
-                cookie.Expires = DateTime.Now.AddYears(-1);
+                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName)
+                {
+                    Expires = DateTime.Now.AddYears(-1)
+                };
                 Response.Cookies.Add(cookie);
             }
 

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 using System.Web;
-using com.JLT.Security.TokenAuth;
+using JLT.Security.TokenAuth;
 using MySql.Data.MySqlClient;
-using com.JLT.Entity;
-using com.JLT.DAL;
+using JLT.Floorplan.Entity;
+using JLT.Floorplan.DAL;
 
-namespace com.JLT.RestAPI.Controllers
+namespace JLT.RestAPI.Controllers
 {
     public class EmployeeController : ApiController
     {

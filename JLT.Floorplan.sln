@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JLT.Floorplan.DAL", "JLT.Floorplan.DAL\JLT.Floorplan.DAL.csproj", "{61DC63C3-295A-4D22-AA90-285D63D2288A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JLT.MySQL.DataAccess", "JLT.MySQL.DataAccess\JLT.MySQL.DataAccess.csproj", "{8465DAD5-D59B-4959-B3ED-E3E58584EC77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JLT.MySql.DataAccess", "JLT.MySQL.DataAccess\JLT.MySql.DataAccess.csproj", "{8465DAD5-D59B-4959-B3ED-E3E58584EC77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JLT.Floorplan.Entity", "JLT.Floorplan.Entity\JLT.Floorplan.Entity.csproj", "{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}"
 EndProject

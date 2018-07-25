@@ -7,7 +7,7 @@ using System.Data;
 using System.Configuration;
 
 
-namespace com.JLT.DataAccess
+namespace JLT.MySql.DataAccess
 {
     public class MySqlDatabaseFactory
     {

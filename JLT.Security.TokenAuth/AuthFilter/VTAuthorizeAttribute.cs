@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Web.Http;
 using System.Web.Mvc;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 using System.Web;
 using System.Net.Http;
 using System.Net;
 using MySql.Data.MySqlClient;
 
-namespace com.JLT.Security.TokenAuth
+namespace JLT.Security.TokenAuth
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
     public class VTAuthorizeAttribute : System.Web.Http.AuthorizeAttribute

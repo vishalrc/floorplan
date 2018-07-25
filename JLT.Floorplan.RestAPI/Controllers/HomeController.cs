@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace com.JLT.RestAPI.Controllers
+namespace JLT.RestAPI.Controllers
 {
     public class HomeController : Controller
     {

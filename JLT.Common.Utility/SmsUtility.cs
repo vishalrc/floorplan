@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public static class SmsUtility
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public static class StringUtility
     {

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 using System.Web;
-using com.JLT.Security.TokenAuth;
+using JLT.Security.TokenAuth;
 using MySql.Data.MySqlClient;
-using com.JLT.Entity;
+using JLT.Floorplan.Entity;
 
-namespace com.JLT.RestAPI.Controllers
+namespace JLT.RestAPI.Controllers
 {
     public class SecurityController : ApiController
     {
@@ -35,7 +35,7 @@ namespace com.JLT.RestAPI.Controllers
 
         [HttpPost]
         [ActionName("obtainAuthToken")]
-        public HttpResponseMessage obtainAuthToken(HttpRequestMessage request, [FromBody]string value)
+        public HttpResponseMessage ObtainAuthToken(HttpRequestMessage request, [FromBody]string value)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace com.JLT.RestAPI.Controllers
 
         [HttpGet]
         [ActionName("validateToken")]
-        public HttpResponseMessage validateToken(HttpRequestMessage request)
+        public HttpResponseMessage ValidateToken(HttpRequestMessage request)
         {
             string token = string.Empty;
             string IPAddress = string.Empty;
@@ -229,7 +229,7 @@ namespace com.JLT.RestAPI.Controllers
                 if (string.IsNullOrEmpty(AuthHeader))
                     throw new SecurityTokenException("403:Authorization Error: Token not provided");
 
-                token = com.JLT.Common.Utility.StringUtility.SplitString(AuthHeader, " ")[1];
+                token = JLT.Common.Utility.StringUtility.SplitString(AuthHeader, " ")[1];
                 IPAddress = HttpContext.Current.Request.UserHostAddress;
                 bool IsValid = false;
                 using (var objTokenService = new TokenService())
@@ -333,7 +333,7 @@ namespace com.JLT.RestAPI.Controllers
 
         [HttpGet]
         [ActionName("revokeAuthToken")]
-        public HttpResponseMessage revokeAuthToken(HttpRequestMessage request)
+        public HttpResponseMessage RevokeAuthToken(HttpRequestMessage request)
         {
             string token = string.Empty;
             string IPAddress = string.Empty;
@@ -342,7 +342,7 @@ namespace com.JLT.RestAPI.Controllers
                 var AuthHeader = HttpContext.Current.Request.Headers["Authorization"];
                 if (string.IsNullOrEmpty(AuthHeader))
                     throw new SecurityTokenException("403:Authorization Error: Token not provided");
-                token = com.JLT.Common.Utility.StringUtility.SplitString(AuthHeader, " ")[1];
+                token = JLT.Common.Utility.StringUtility.SplitString(AuthHeader, " ")[1];
                 IPAddress = HttpContext.Current.Request.UserHostAddress;
                 bool IsValid = false;
                 using (var objTokenService = new TokenService())

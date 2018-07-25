@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace com.JLT.RestAPI
+namespace JLT.Floorplan.RestAPI
 {
     public class RouteConfig
     {

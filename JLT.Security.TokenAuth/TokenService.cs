@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 using System.Reflection;
 using MySql.Data.MySqlClient;
 
-namespace com.JLT.Security.TokenAuth
+namespace JLT.Security.TokenAuth
 {
     public class TokenService : IDisposable
     {
@@ -89,8 +89,8 @@ namespace com.JLT.Security.TokenAuth
                 int TokenValiditySec = Convert.ToInt32(CommonUtility.GetAppSettingKey(Constants.AuthToken.TokenValiditySec));
 
                 var TokenBody = CryptoUtility.Decrypt(AuthToken, AES_KEY, AES_SALT);
-                var LstTokenBody = com.JLT.Common.Utility.StringUtility.SplitString(TokenBody, "##");
-                var LstInnerMsg = com.JLT.Common.Utility.StringUtility.SplitString(LstTokenBody[0], Constants.AuthToken.SeperatorString); //InnerMsg = UserID + Role + IPAddress + CryptoUtility.GenerateTimeStamp();
+                var LstTokenBody = JLT.Common.Utility.StringUtility.SplitString(TokenBody, "##");
+                var LstInnerMsg = JLT.Common.Utility.StringUtility.SplitString(LstTokenBody[0], Constants.AuthToken.SeperatorString); //InnerMsg = UserID + Role + IPAddress + CryptoUtility.GenerateTimeStamp();
                 var TokenHash = LstTokenBody[1];
                 string Msg_Hash = string.Empty;
                 using (var objTokenDBService = new TokenDBService())
@@ -161,8 +161,8 @@ namespace com.JLT.Security.TokenAuth
                 string AES_SALT = CommonUtility.GetAppSettingKey(Constants.AuthToken.AES_SALT);
                 int SaltLength = Convert.ToInt32(CommonUtility.GetAppSettingKey(Constants.AuthToken.SaltLength));
                 var TokenBody = CryptoUtility.Decrypt(AuthToken, AES_KEY, AES_SALT);
-                var LstTokenBody = com.JLT.Common.Utility.StringUtility.SplitString(TokenBody, "##");
-                var LstInnerMsg = com.JLT.Common.Utility.StringUtility.SplitString(LstTokenBody[0], Constants.AuthToken.SeperatorString); //InnerMsg = UserID + Role + IPAddress + CryptoUtility.GenerateTimeStamp();
+                var LstTokenBody = JLT.Common.Utility.StringUtility.SplitString(TokenBody, "##");
+                var LstInnerMsg = JLT.Common.Utility.StringUtility.SplitString(LstTokenBody[0], Constants.AuthToken.SeperatorString); //InnerMsg = UserID + Role + IPAddress + CryptoUtility.GenerateTimeStamp();
                 var TokenHash = LstTokenBody[1];
                 using (var objTokenDBService = new TokenDBService())
                 {

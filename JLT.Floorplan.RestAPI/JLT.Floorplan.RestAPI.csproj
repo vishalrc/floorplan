@@ -61,7 +61,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -166,23 +168,23 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\com.JLT.DAL\JLT.Floorplan.DAL.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.DAL\JLT.Floorplan.DAL.csproj">
       <Project>{61DC63C3-295A-4D22-AA90-285D63D2288A}</Project>
       <Name>JLT.Floorplan.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.DataAccess\JLT.MySQL.DataAccess.csproj">
+    <ProjectReference Include="..\JLT.MySQL.DataAccess\JLT.MySql.DataAccess.csproj">
       <Project>{8465DAD5-D59B-4959-B3ED-E3E58584EC77}</Project>
-      <Name>JLT.MySQL.DataAccess</Name>
+      <Name>JLT.MySql.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.Entity\JLT.Floorplan.Entity.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.Entity\JLT.Floorplan.Entity.csproj">
       <Project>{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}</Project>
       <Name>JLT.Floorplan.Entity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.RestClient\JLT.Floorplan.RestClient.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.RestClient\JLT.Floorplan.RestClient.csproj">
       <Project>{41798057-7A58-4D86-B02D-E10E94E0BC7A}</Project>
       <Name>JLT.Floorplan.RestClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\com.JLT.Security.TokenAuth\JLT.Security.TokenAuth.csproj">
+    <ProjectReference Include="..\JLT.Security.TokenAuth\JLT.Security.TokenAuth.csproj">
       <Project>{0A0CE8F5-96F3-446D-9EDA-0F695DD03DDA}</Project>
       <Name>JLT.Security.TokenAuth</Name>
     </ProjectReference>

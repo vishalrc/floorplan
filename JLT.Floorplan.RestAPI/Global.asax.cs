@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace com.JLT.RestAPI
+namespace JLT.Floorplan.RestAPI
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -30,9 +30,9 @@ namespace com.JLT.RestAPI
             if (!string.IsNullOrEmpty(clientUrl))
             {
                 var uri = new Uri(HttpContext.Current.Request.Headers["Referer"]);
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", (uri.Scheme == null ? "" : uri.Scheme) + "://" + (uri.Authority == null ? "" : uri.Authority));
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", (uri.Scheme ?? "") + "://" + (uri.Authority ?? ""));
             }
-            //HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://exam.hostexam.com");
+            //HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "http://abc.com");
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
             {
                 HttpContext.Current.Response.AddHeader("Cache-Control", "no-cache");

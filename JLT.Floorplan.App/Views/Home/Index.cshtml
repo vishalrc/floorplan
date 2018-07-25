@@ -1,10 +1,10 @@
-﻿@using com.JLT.Common.Utility;
-@using com.JLT.Entity;
+﻿@using JLT.Common.Utility;
+@using JLT.Floorplan.Entity;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
-    var Userrole = com.JLT.Common.Utility.CommonUtility.LoggedInUser.role;
+    var Userrole = JLT.Common.Utility.CommonUtility.LoggedInUser.role;
     var Adminrole = Convert.ToInt32(Enums.UserRoles.Admin);
     var Authrole = Convert.ToInt32(Enums.UserRoles.Authorizer);
     var Proctorrole = Convert.ToInt32(Enums.UserRoles.Proctor);

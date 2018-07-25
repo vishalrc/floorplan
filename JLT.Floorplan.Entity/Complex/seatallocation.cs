@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace com.JLT.Entity
+namespace JLT.Floorplan.Entity
 {
   public  class seatallocation
     {

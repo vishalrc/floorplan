@@ -1,8 +1,8 @@
 ﻿using System.Web;
 using System.Web.Mvc;
-using com.JLT.Common.Utility;
+using JLT.Common.Utility;
 
-namespace com.JLT.RestAPI
+namespace JLT.Floorplan.RestAPI
 {
     public class FilterConfig
     {

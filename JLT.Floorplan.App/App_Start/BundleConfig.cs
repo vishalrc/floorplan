@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace com.JLT.eProctor
+namespace JLT.Floorplan
 {
     public class BundleConfig
     {

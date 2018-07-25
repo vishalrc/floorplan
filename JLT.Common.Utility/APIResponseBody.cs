@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace com.JLT.Common.Utility
+namespace JLT.Common.Utility
 {
     public class APIResponseBody : IDisposable
     {

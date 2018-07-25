@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Web.WebPages.OAuth;
 
-namespace com.JLT.eProctor
+namespace JLT.Floorplan
 {
     public static class AuthConfig
     {

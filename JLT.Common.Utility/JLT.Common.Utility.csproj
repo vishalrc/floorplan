@@ -67,7 +67,7 @@
     <Compile Include="UserAuthentication.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\com.JLT.Entity\JLT.Floorplan.Entity.csproj">
+    <ProjectReference Include="..\JLT.Floorplan.Entity\JLT.Floorplan.Entity.csproj">
       <Project>{1A9DAA55-E5B2-46E1-ACD8-FE4FD59C1659}</Project>
       <Name>JLT.Floorplan.Entity</Name>
     </ProjectReference>
