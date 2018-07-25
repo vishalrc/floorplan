@@ -1,0 +1,1 @@
+update user_vt set password=aes_encrypt('pass','@D1v3rs1f!3d5ecu7r6n0t3@6ybr0k3n!0uW100f@#$l'),failedpasswordattemptcount=0 where id=1
