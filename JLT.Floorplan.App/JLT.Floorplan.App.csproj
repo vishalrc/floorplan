@@ -259,6 +259,7 @@
     <Content Include="css\app.min.css" />
     <Content Include="css\bootstrap-datetimepicker.css" />
     <Content Include="css\font.css" />
+    <Content Include="css\fp.css" />
     <Content Include="css\material-design-icons.css" />
     <Content Include="css\md.css" />
     <Content Include="favicon.ico" />
