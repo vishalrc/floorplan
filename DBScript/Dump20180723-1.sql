@@ -1,10 +1,29 @@
 CREATE DATABASE  IF NOT EXISTS `jlt_smdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `jlt_smdb`;
--- MySQL dump 10.13  Distrib 5.6.23, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
+--
+-- Host: localhost    Database: jlt_smdb
+-- ------------------------------------------------------
+-- Server version	8.0.11
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+ SET NAMES utf8 ;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `action_vt`
+--
 
 DROP TABLE IF EXISTS `action_vt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `action_vt` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `actionname` varchar(200) DEFAULT NULL,
@@ -31,7 +50,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `associate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `associate` (
   `associateid` int(11) NOT NULL,
   `associateno` varchar(50) DEFAULT NULL,
@@ -68,7 +87,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `bldgfloor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `bldgfloor` (
   `floorid` int(11) NOT NULL,
   `floorcode` varchar(50) DEFAULT NULL,
@@ -95,7 +114,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `building`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `building` (
   `buildingid` int(11) NOT NULL,
   `buildingcode` varchar(50) DEFAULT NULL,
@@ -122,7 +141,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `city`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `city` (
   `cityid` int(11) NOT NULL AUTO_INCREMENT,
   `cityname` varchar(100) NOT NULL,
@@ -149,7 +168,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `department`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `department` (
   `departmentid` int(11) NOT NULL AUTO_INCREMENT,
   `departmentname` varchar(100) DEFAULT NULL,
@@ -176,7 +195,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `elmah_error`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `elmah_error` (
   `ErrorId` char(36) NOT NULL,
   `Application` varchar(60) NOT NULL,
@@ -211,7 +230,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `orgcountry`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `orgcountry` (
   `orgcountryid` int(11) NOT NULL,
   `countryname` varchar(100) DEFAULT NULL,
@@ -237,7 +256,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `role_vt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `role_vt` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `rolename` varchar(200) DEFAULT NULL,
@@ -264,13 +283,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `seat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `seat` (
   `seatid` int(11) NOT NULL,
   `seatlabel` varchar(50) DEFAULT NULL,
   `cubicalno` varchar(100) DEFAULT NULL,
   `rowno` int(11) DEFAULT NULL,
   `columnno` int(11) DEFAULT NULL,
+  `colspan` int(11) DEFAULT '1',
+  `rowspan` int(11) DEFAULT '1',
   `teamid` int(11) DEFAULT NULL,
   `floorid` int(11) NOT NULL,
   `type` varchar(100) DEFAULT NULL,
@@ -284,6 +305,7 @@ CREATE TABLE `seat` (
 
 LOCK TABLES `seat` WRITE;
 /*!40000 ALTER TABLE `seat` DISABLE KEYS */;
+INSERT INTO `seat` VALUES (1,'10B-LS-R1-S1','1',1,1,NULL,NULL,1,1,'1'),(2,'10B-LS-R1-S2','1',1,2,NULL,NULL,1,1,'1'),(3,'10B-LS-R1-S3','1',1,3,NULL,NULL,1,1,'1'),(4,'10B-LS-R1-S4','1',1,4,NULL,NULL,1,1,'1'),(5,'PM','1',1,5,2,1,1,1,'2'),(7,'10B-LS-R1-S5','2',2,1,NULL,NULL,1,1,'1'),(8,'10B-LS-R1-S6','2',2,2,NULL,NULL,1,1,'1'),(9,'10B-LS-R1-S7','2',2,3,NULL,NULL,1,1,'1'),(10,'10B-LS-R1-S8','2',2,4,NULL,NULL,1,1,'1');
 /*!40000 ALTER TABLE `seat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +315,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `seatallocation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `seatallocation` (
   `allocationid` int(11) NOT NULL AUTO_INCREMENT,
   `associateid` int(11) DEFAULT NULL,
@@ -321,7 +343,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `seatvacancy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `seatvacancy` (
   `seatvacancyid` int(11) NOT NULL AUTO_INCREMENT,
   `associateno` varchar(50) DEFAULT NULL,
@@ -348,7 +370,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `team`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `team` (
   `teamid` int(11) NOT NULL AUTO_INCREMENT,
   `teamname` varchar(100) DEFAULT NULL,
@@ -374,7 +396,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_vt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_vt` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `userid` varchar(200) DEFAULT NULL,
@@ -416,7 +438,7 @@ CREATE TABLE `user_vt` (
 
 LOCK TABLES `user_vt` WRITE;
 /*!40000 ALTER TABLE `user_vt` DISABLE KEYS */;
-INSERT INTO `user_vt` VALUES (1,'admin',1,'Administrator','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a0.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','T/wm8C+NzRiyWOhPfG8upQ==',0,0,'2018-07-16 14:33:29',0,'2018-07-22 01:46:06',NULL,NULL,0),(2,'manager1',2,'manager1','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a1.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(3,'manager2',2,'manager2','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a2.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(4,'member1',3,'member1','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a3.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(5,'member2',3,'member2','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a4.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0);
+INSERT INTO `user_vt` VALUES (1,'admin',1,'Administrator','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a0.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','\�s\�\�\�\�\n\�pOu�\�','oCByBaOlHllEOCBJ75jdAA==',0,0,'2018-07-16 14:33:29',0,'2018-07-27 18:49:25',NULL,'2018-07-25 18:59:14',0),(2,'manager1',2,'manager1','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a1.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(3,'manager2',2,'manager2','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a2.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(4,'member1',3,'member1','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a3.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0),(5,'member2',3,'member2','','','dharmendra_singh@jltasia.com','7658926669','7658926669','a4.jpg',NULL,'Add1','mumbai','TS','502032',1,'','','à­sìÝÈé\nÕpOu±Û','abcdefgh',0,0,'2018-07-16 14:33:29',0,NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `user_vt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -426,7 +448,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `userroleassociation_vt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `userroleassociation_vt` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `roleid` bigint(20) unsigned DEFAULT NULL,
@@ -455,7 +477,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `usertype_vt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `usertype_vt` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `usertype` varchar(200) DEFAULT NULL,
@@ -478,6 +500,15 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'jlt_smdb'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `elmah_geterrorsxml` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `elmah_geterrorsxml`(
   IN App VARCHAR(60),
@@ -519,7 +550,19 @@ BEGIN
 
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `elmah_geterrorxml` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `elmah_geterrorxml`(
   IN Id CHAR(36),
@@ -532,7 +575,19 @@ BEGIN
     WHERE   `ErrorId` = Id AND `Application` = App;
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `elmah_logerror` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `elmah_logerror`(
     IN ErrorId CHAR(36), 
@@ -573,7 +628,19 @@ BEGIN
     );
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `raise_error` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `raise_error`(errno BIGINT UNSIGNED, message VARCHAR(256))
 BEGIN
@@ -584,7 +651,19 @@ BEGIN
 		MYSQL_ERRNO = errno;
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `uasp_tokenservicehashsalt` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `uasp_tokenservicehashsalt`(p_userid int, p_salt varchar(50))
 BEGIN
@@ -592,6 +671,19 @@ BEGIN
 	
 END ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `uasp_user` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `uasp_user`(
 	p_id BIGINT UNSIGNED,
@@ -669,7 +761,19 @@ BEGIN
 	select p_id;
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `usp_splitfn` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_splitfn`( 
 p_string varchar(2000), 
@@ -697,7 +801,19 @@ end while;
 select * from output;
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `ussp_tokenservicehashsalt` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ussp_tokenservicehashsalt`(p_userid int)
 BEGIN
@@ -705,7 +821,19 @@ BEGIN
 	
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `ussp_user` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ussp_user`(
 p_id int,
@@ -758,7 +886,19 @@ BEGIN
     AND isenabled != -1;
 END ;;
 DELIMITER ;
-
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `ussp_validateusercredential` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ussp_validateusercredential`( 
 in p_userid varchar(50),  
@@ -850,4 +990,18 @@ BEGIN
 	END IF; -- v_uservalid ends
 END ;;
 DELIMITER ;
--- Dump completed on 2018-07-23  0:29:04
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-07-27 18:58:46
