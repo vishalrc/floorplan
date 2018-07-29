@@ -1,5 +1,9 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@using JLT.Common.Utility;
+@{
+    ViewBag.Title = "Floor Plan";
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+
 }
 <link rel="stylesheet" href="@Url.Content("~/css/fp.css")" type="text/css" />
 <link rel="stylesheet" href="@Url.Content("~/css/jquery.seat-charts.css")" type="text/css" />
@@ -25,8 +29,38 @@
 <script src="@Url.Content("~/js/jquery.seat-charts.js")"></script>
 
 <script>
+    var apiurl = '@RestAPI';
+    var seatmap = [];
+    var AjaxCalls = {
+        GetSeats: function () {
+            var postData = {};
+            $.ajax({
+                url: apiurl + "Masters/Getseats",
+                type: "POST",
+                async: true,
+                crossDomain: true,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                datatype: "json",
+                data: "=" + JSON.stringify(postData),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    alert(data.body);
+                    var seats = $.parseJSON(data.body);
+
+                    //$.each(data, function (i, o) {
+                    //    seatmap.push(o.se
+                    //}
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var e = $.parseJSON(xhr.responseText);
+                    alert(e.message);
+                }
+            });
+        },
+    }
     var firstSeatLabel = 1;
     $(document).ready(function () {
+        AjaxCalls.GetSeats();
         var $cart = $('#selected-seats'),
             $counter = $('#counter'),
             $total = $('#total'),

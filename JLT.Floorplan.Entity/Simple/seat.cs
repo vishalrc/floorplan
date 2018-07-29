@@ -7,7 +7,7 @@ namespace JLT.Floorplan.Entity
 {
     public class seat
     {
-        public int seatid { get; set; }
+        public int? seatid { get; set; }
         public string seatlabel { get; set; }
         public string cubicalno { get; set; }
         public int rowno { get; set; }
