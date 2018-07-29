@@ -260,6 +260,7 @@
     <Content Include="css\bootstrap-datetimepicker.css" />
     <Content Include="css\font.css" />
     <Content Include="css\fp.css" />
+    <Content Include="css\jquery.seat-charts.css" />
     <Content Include="css\material-design-icons.css" />
     <Content Include="css\md.css" />
     <Content Include="favicon.ico" />
@@ -316,6 +317,7 @@
     <Content Include="img\PhotoPlaceHolder.jpg" />
     <Content Include="js\bootstrap-datetimepicker.js" />
     <Content Include="js\face-min.js" />
+    <Content Include="js\jquery.seat-charts.js" />
     <Content Include="js\tracking-min.js" />
     <Content Include="js\ui-jp.config.js" />
     <Content Include="js\ui-jp.js" />

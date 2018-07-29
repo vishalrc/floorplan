@@ -42,6 +42,34 @@ namespace JLT.Floorplan.DAL
             finally { db.CloseConnection(conn); }
         }
 
-             public void Dispose() { }
+        public List<seat> GetSeats(seat objseat)
+        {
+            MySqlDatabaseFactory db = new MySqlDatabaseFactory();
+            Parameters parameters = new Parameters();
+            MySqlDataReader reader = null;
+            MySqlConnection conn = db.GetDatabaseConnection();
+            try
+            {
+                DataTable dt = new DataTable();
+                parameters.Add("p_seatid", objseat.seatid, ParameterDirection.Input);
+                parameters.Add("p_seatlabel", objseat.seatlabel, ParameterDirection.Input);
+                parameters.Add("p_booked", objseat.isbooked, ParameterDirection.Input);
+                using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_seat, parameters))
+                {
+                    dt = db.Load(reader, true);
+                }
+                return CommonUtility.ToList<seat>(dt);
+            }
+            catch (MySqlException odbcEx)
+            {
+                throw odbcEx;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally { db.CloseConnection(conn); }
+        }
+        public void Dispose() { }
     }
 }

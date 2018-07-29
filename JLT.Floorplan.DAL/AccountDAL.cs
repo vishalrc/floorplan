@@ -109,44 +109,13 @@ namespace JLT.Floorplan.DAL
             }
             finally { db.CloseConnection(conn); }
         }
-        public bool AssignUserTest(seatallocation obj)
-        {
-            MySqlDatabaseFactory db = new MySqlDatabaseFactory();
-            Parameters parameters = new Parameters();
-            MySqlConnection conn = db.GetDatabaseConnection();
-            try
-            {
-                //parameters.Add("p_userid", obj.userid, ParameterDirection.Input);
-                //parameters.Add("p_userids", obj.userids, ParameterDirection.Input);
-                //parameters.Add("p_testids", obj.testids, ParameterDirection.Input);
-
-                using (MySqlTransaction tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        var ds = db.ExecuteDataSet(conn, tran, CommandType.StoredProcedure, parameters, Constants.StoredProcedures.uasp_usertestassociation);
-                        tran.Commit();
-                    }
-                    catch (MySqlException ex)
-                    {
-                        tran.Rollback();
-                        throw ex;
-                    }
-                }
-                return true;
-            }
-            catch (MySqlException odbcEx)
-            {
-                throw odbcEx;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally { db.CloseConnection(conn); }
-        }
-
+    
 
         public void Dispose() { }
+
+        public object AsignSeat(seatallocation objEntity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

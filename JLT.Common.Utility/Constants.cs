@@ -1,4 +1,6 @@
 ﻿
+using System.Data;
+
 namespace JLT.Common.Utility
 {
     public static class Constants
@@ -27,34 +29,10 @@ namespace JLT.Common.Utility
         {
             public const string uasp_user = "uasp_user";
             public const string ussp_user = "ussp_user";
-            public const string uasp_test = "uasp_test";
-            public const string ussp_test = "ussp_test";
-            public const string udsp_test = "udsp_test";
-            public const string uasp_examinee = "uasp_examinee";
-            public const string ussp_examinee = "ussp_examinee";
-            public const string ussp_examinee_report = "ussp_examinee_report";
-            public const string uasp_usertestassociation = "uasp_usertestassociation";
-            public const string ussp_examineelog = "ussp_examineelog";
-            public const string uasp_examineelog = "uasp_examineelog";
-            public const string uasp_broadcastmsg = "uasp_broadcastmsg";
-            public const string uasp_examinee_status = "uasp_examinee_status";
-            public const string uasp_examineeauthorization = "uasp_examineeauthorization";
-            public const string uasp_liveproctor = "uasp_liveproctor";
-            public const string uasp_assingproctor = "uasp_assingproctor";
-            public const string ussp_proctorexaminee = "ussp_proctorexaminee";
-            public const string ussp_examineelogin = "ussp_examineelogin";
+            public const string ussp_country = "ussp_country"; 
             public const string ussp_admindashboard = "ussp_admindashboard";
-
-            public const string uasp_activeproctor = "uasp_activeproctor";
-            public const string uasp_proctorcandidate = "uasp_proctorcandidate";
-            public const string udsp_activeproctor = "udsp_activeproctor";
-            public const string ussp_country = "ussp_country";
-            public const string ussp_timezone = "ussp_timezone";
-            public const string ussp_language = "ussp_language";
-            public const string ussp_availableproctor = "ussp_availableproctor";
-            public const string ussp_proctorcandidateassociation = "ussp_proctorcandidateassociation";
-            public const string ussp_getlivetests = "ussp_getlivetests";
-            public const string ussp_checkexamineevalidation = "ussp_checkexamineevalidation";
+            public const string ussp_seat = "ussp_seat";
+            public static string ussp_leave;
         }
 
         /********************************************** SMS Keys *****************************************************************/
@@ -72,13 +50,7 @@ namespace JLT.Common.Utility
         public static class ApplicationConfiguration
         {
             public const string RestServiceURL = "RestServiceURL";
-            public const string maxcandidateperproctor = "maxcandidateperproctor";
-            public const string TestEngineAPIurl = "TestEngineAPIurl";
-            public const string EamilRegEx = @"EamilRegEx";
-            public const string PhotoInterval = "PhotoInterval";
-            public const string FaceTrackingInterval = "FaceTrackingInterval";
-            public const string RejoiningInterval = "RejoiningInterval";
-            public const string photolocation = "photolocation";
+            
         }
 
         /********************************************** OTP *********************************************************************/

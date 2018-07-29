@@ -291,7 +291,7 @@ namespace JLT.RestAPI.Controllers
                 var objEntity = CommonUtility.Deserialize<seatallocation>(value);
                 using (var objDAL = new AccountDAL())
                 {
-                    var result = objDAL.AssignUserTest(objEntity);
+                    var result = objDAL.AsignSeat(objEntity);
 
                     return request.CreateResponse(HttpStatusCode.OK,
                             (new APIResponseBody

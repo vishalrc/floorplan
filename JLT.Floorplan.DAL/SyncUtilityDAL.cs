@@ -49,7 +49,7 @@ namespace JLT.Floorplan.DAL
                 {
                     try
                     {
-                        var ds = db.ExecuteDataSet(conn, tran, CommandType.StoredProcedure, parameters, Constants.StoredProcedures.uasp_examinee);
+                        var ds = db.ExecuteDataSet(conn, tran, CommandType.StoredProcedure, parameters, Constants.StoredProcedures.ussp_leave);
                         tran.Commit();
                         result = Convert.ToInt32(ds.Tables[1].Rows[0][0]);
                     }
