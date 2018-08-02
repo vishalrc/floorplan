@@ -14,7 +14,7 @@ using JLT.Common.Utility;
 using System.IO;
 
 
-namespace JLT.eProctor.Controllers
+namespace JLT.Floorplan.Controllers
 {
     //[Authorize]
     //[InitializeSimpleMembership]

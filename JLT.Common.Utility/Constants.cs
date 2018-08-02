@@ -50,6 +50,7 @@ namespace JLT.Common.Utility
         public static class ApplicationConfiguration
         {
             public const string RestServiceURL = "RestServiceURL";
+            public const string EamilRegEx = "EamilRegEx";
             
         }
 

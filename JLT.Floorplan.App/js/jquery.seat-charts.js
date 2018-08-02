@@ -89,10 +89,10 @@
 							focusable      : true,
                             tabIndex: -1,
                             'data-toggle': 'tooltip',
-                            title: '10B-LS-R5-S45',
+                            title: fn.settings.label,
                             'data-placement':"top" 
 						})
-                        .html('')//fn.settings.label
+                        .html(fn.settings.label.slice(-4))//fn.settings.label
 						.addClass(['seatCharts-seat', 'seatCharts-cell', 'available'].concat(
 							//let's merge custom user defined classes with standard JSC ones
 							fn.settings.classes, 

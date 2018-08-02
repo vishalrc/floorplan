@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
-    var ExamEngineAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.TestEngineAPIurl);
 }
 
 <div class="wrapper-md">
@@ -13,9 +12,9 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs m-t" role="tablist">
         <li role="presentation" class="active"><a href="#active" aria-controls="active" role="tab"
-            data-toggle="tab">All Employee<span class="badge progress-bar-info" id="activebadge">0</span></a></li>
+            data-toggle="tab">Employee List <span class="badge progress-bar-info" id="activebadge">0</span></a></li>
         <li role="presentation"><a href="#inactive" aria-controls="inactive" role="tab" data-toggle="tab">
-            Absent Employee <span class="badge progress-bar-info" id="inactivebadge">0</span></a></li>
+           Employee(s) on Planned Leave <span class="badge progress-bar-info" id="inactivebadge">0</span></a></li>
     </ul>
      <!-- Tab panes -->
     <div class="tab-content">
@@ -131,7 +130,7 @@
             },
             SyncTest: function () {
                 $.ajax({
-                    url: '@ExamEngineAPI' + "Proctor/SyncTest",
+                    url:  "Proctor/SyncTest",
                     type: "GET",
                     async: true,
                     crossDomain: true,

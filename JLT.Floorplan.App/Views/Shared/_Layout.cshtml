@@ -21,8 +21,9 @@
     <link rel="stylesheet" href="@Url.Content("~/css/app.css")" type="text/css" />
     <link rel="stylesheet" href="@Url.Content("~/css/bootstrap-datetimepicker.css")" type="text/css" />
     <script src="@Url.Content("~/libs/jquery/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/libs/jquery/bootstrap-daterangepicker/daterangepicker.js")"></script>
     <script src="@Url.Content("~/libs/jquery/moment/moment.js")"></script>
-    <script src="@Url.Content("~/js/bootstrap-datetimepicker.js")"></script> 
+    <script src="@Url.Content("~/js/bootstrap-datetimepicker.js")"></script>
     <script>
         $(document).ready(function () {
             //$(".app").toggleClass("app-aside-folded", 10);
@@ -104,15 +105,7 @@
                         </a>
                         <!-- dropdown -->
                         <ul class="dropdown-menu animated fadeInRight w">
-                            @*<li class="wrapper b-b m-b-sm bg-light m-t-n-xs">
-                                  <div>
-                                    <p>300mb of 500mb used</p>
-                                  </div>
-                                  <div class="progress progress-xs m-b-none dker">
-                                    <div class="progress-bar progress-bar-info" data-toggle="tooltip" data-original-title="50%" style="width: 50%"></div>
-                                  </div>
-                                </li>*@
-                            @if ((UserRole & AdminRole) == AdminRole)
+                           @if ((UserRole & AdminRole) == AdminRole)
                             {
                                 <li>
                                     <a href="@Url.Action("AccountSetting", "Account")">
@@ -121,7 +114,7 @@
                                 </li>
                             }
                             <li>
-                                <a href="@Url.Action("MyProfile", "Account")"> <span class="badge bg-danger pull-right">30%</span><span>Profile</span></a>
+                                <a href="@Url.Action("MyProfile", "Account")"></a>
                             </li>
                             <li>
                                 <a ui-sref="app.docs">
@@ -189,9 +182,6 @@
                     <!-- nav -->
                     <nav ui-nav class="navi clearfix">
                         <ul class="nav">
-                            @* <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                                  <span>Navigation</span>
-                                </li>*@
                             <li>
                                 <a href="@Url.Action("index", "Home")">
                                     <i class="glyphicon glyphicon-stats icon text-primary-dker"></i>
@@ -204,27 +194,27 @@
                             <li>
                                 <a href="@Url.Action("Index", "Floorplan")">
                                     <i class="glyphicon glyphicon-book icon text-primary-dker"></i>
-                                    <span>Manage Floorplan</span>
+                                    <span>Seat Plan</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="@Url.Action("Employee", "Manage")">
                                     <i class="glyphicon glyphicon-list icon text-primary-dker"></i>
-                                    <span>Manage Employee</span>
+                                    <span>Employee</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="@Url.Action("Leave", "Manage")">
                                     <i class="glyphicon glyphicon-refresh icon text-primary-dker"></i>
-                                    <span>Sync Leave</span>
+                                    <span>Leaves</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="@Url.Action("AssignSeat", "Manage")">
-                                    <i class="glyphicon glyphicon-cog icon text-primary-dker"></i>
-                                    <span>Assign Seats</span>
-                                </a>
-                            </li>
+                            @*<li>
+                                    <a href="@Url.Action("AssignSeat", "Manage")">
+                                        <i class="glyphicon glyphicon-cog icon text-primary-dker"></i>
+                                        <span>Assign Seats</span>
+                                    </a>
+                                </li>*@
                             <li>
                                 <a href="@Url.Action("Users", "Manage")">
                                     <i class="glyphicon glyphicon-user icon text-primary-dker"></i>
@@ -286,7 +276,7 @@
         <footer id="footer" class="app-footer" role="footer">
             <div class="wrapper b-t bg-light">
                 <span class="pull-right">2.0.2 <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
-                &copy; 2018 www.jlt.com
+                &copy; 2018 www.india.jlt.com
             </div>
         </footer>
         <!-- / footer -->

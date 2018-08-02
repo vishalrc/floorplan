@@ -21,17 +21,14 @@ namespace JLT.Common.Utility
             General = 1,
             Add_Edit_User = 2,
             Delete_Archive_User = 4,
-            Add_Edit_Test = 8,
-            Authorizing = 16,
-            Proctoring = 32
+            Add_Edit_Employee = 8,
         }
 
         public enum UserType
         {
             Admin = 1,
-            Proctor = 2,
-            Authorizer = 3,
-            Examinee = 4,
+            Manager = 2,
+            Teammember= 3,
             Common = 5
         }
 

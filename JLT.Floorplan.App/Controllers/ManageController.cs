@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using JLT.Common.Utility;
 
-namespace JLT.eProctor.Controllers
+namespace JLT.Floorplan.Controllers
 {
     public class ManageController : Controller
     {

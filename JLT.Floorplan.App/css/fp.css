@@ -23,7 +23,7 @@
 .booking-details {
     float: left;
     text-align: left;
-    margin-left: 35px;
+    margin-left: 20px;
     font-size: 12px;
     position: relative;
     height: 400px;
@@ -59,11 +59,9 @@ div.seatCharts-seat.available {
     background-color: #B9DEA0;
 }
 
-    div.seatCharts-seat.available.first-class {
-        /* 	background: url(vip.png); */
+    div.seatCharts-seat.available.general-seat {
         background-color: #3a78c3;
     }
-
 div.seatCharts-seat.focused {
     background-color: #76B474;
 }
@@ -78,7 +76,7 @@ div.seatCharts-seat.unavailable {
 
 div.seatCharts-container {
     border-right: 1px dotted #adadad;
-    width: 80%;
+    width: 77%;
     padding: 20px;
     float: left;
 }
@@ -106,7 +104,5 @@ span.seatCharts-legendDescription {
 
 #selected-seats {
     max-height: 90px;
-    overflow-y: scroll;
-    overflow-x: none;
-    width: 170px;
+    width: 200px;
 }
