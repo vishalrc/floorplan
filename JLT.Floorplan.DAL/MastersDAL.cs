@@ -70,6 +70,35 @@ namespace JLT.Floorplan.DAL
             }
             finally { db.CloseConnection(conn); }
         }
+
+        public List<buildingfloor> Getfloors(buildingfloor objbuildingfloor)
+        {
+            MySqlDatabaseFactory db = new MySqlDatabaseFactory();
+            Parameters parameters = new Parameters();
+            MySqlDataReader reader = null;
+            MySqlConnection conn = db.GetDatabaseConnection();
+            try
+            {
+                DataTable dt = new DataTable();
+                parameters.Add("p_seatid", objbuildingfloor.Floor.floorid, ParameterDirection.Input);
+                parameters.Add("p_seatlabel", objbuildingfloor.Floor.floorname, ParameterDirection.Input);
+                parameters.Add("p_booked", objbuildingfloor.Building.buildingname, ParameterDirection.Input);
+                using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_seat, parameters))
+                {
+                    dt = db.Load(reader, true);
+                }
+                return CommonUtility.ToList<buildingfloor>(dt);
+            }
+            catch (MySqlException odbcEx)
+            {
+                throw odbcEx;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally { db.CloseConnection(conn); }
+        }
         public void Dispose() { }
     }
 }

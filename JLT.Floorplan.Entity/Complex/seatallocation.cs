@@ -9,7 +9,7 @@ namespace JLT.Floorplan.Entity
     {
         public int allocationid { get; set; }
         public Employee employee { get; set; }
-        public seat seat { get; set; }
+        public floor seat { get; set; }
         public DateTime startdate { get; set; }
         public DateTime enddate { get; set; }
         public int days { get; set; }

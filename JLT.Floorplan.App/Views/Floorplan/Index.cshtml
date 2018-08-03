@@ -35,10 +35,10 @@
                     <button class="btn btn-success">Allocate &raquo;</button>
                 </div>
             </div>
-            
+
             <div id="legend"><div class="line line-dashed b-b line-lg pull-in"></div></div>
         </div>
-            </div>
+    </div>
 </div>
 <script src="@Url.Content("~/js/jquery.seat-charts.js")"></script>
 
@@ -64,10 +64,27 @@
                 success: function (data) {
                     //alert(data.body);
                     seats = $.parseJSON(data.body);
+                    var row = 1;
+                    var col = 1;
+                    var e = '';
                     $.each(seats, function (i, s) {
-                        // alert(s.seatlabel);
-                        seatmap.push()
-                    }); 
+                        if (s.row == row) {
+                            if (s.col == col)
+                                e = e + 'f[' + s.seatid + ',' + s.seatlabel + ']'
+                            else {
+                                for (var j = 0; j < (s.col - col); j++) {
+                                    e = e + '_';
+                                }
+                            }
+                            col++;
+                        } else {
+                            seatmap.push(e);
+                            e = '';
+                            row = s.row;
+                            col = 1;
+                        }
+                        //seatmap.push()
+                    });
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     var e = $.parseJSON(xhr.responseText);
@@ -134,7 +151,7 @@
                     if (this.status() == 'available') {
                         $("#" + previd).toggleClass("selected available");
                         //let's create a new <li> which we'll add to the cart items
-                      var seat=  $('<li>' + this.data().category + ' Seat # ' + this.settings.label + '</b></li>')
+                      var seat=  $('<li>' + this.data().category  + this.settings.label + '</b></li>')
                             .attr('id', 'cart-item-' + this.settings.id)
                             .data('seatId', this.settings.id)
                         //.appendTo();
