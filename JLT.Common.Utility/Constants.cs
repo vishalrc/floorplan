@@ -32,7 +32,9 @@ namespace JLT.Common.Utility
             public const string ussp_country = "ussp_country"; 
             public const string ussp_admindashboard = "ussp_admindashboard";
             public const string ussp_seat = "ussp_seat";
-            public static string ussp_leave;
+            public const string  ussp_leave= "ussp_leave";
+            public const string  uasp_seatallocation= "uasp_seatallocation";
+            public const string ussp_floor = "ussp_floor";
         }
 
         /********************************************** SMS Keys *****************************************************************/

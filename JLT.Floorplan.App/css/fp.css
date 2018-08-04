@@ -1,5 +1,5 @@
 ﻿.front-indicator {
-    width:35%;
+    width:200px;
     margin: 5px 15px 15px 32px;
     background-color: #f6f6f6;
     color: #adadad;
@@ -75,8 +75,9 @@ div.seatCharts-seat.unavailable {
 }
 
 div.seatCharts-container {
-    border-right: 1px dotted #adadad;
-    width: 77%;
+    border: 1px dotted #adadad;
+    min-width: 840px;
+    width:77%;
     padding: 20px;
     float: left;
 }

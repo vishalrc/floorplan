@@ -80,14 +80,56 @@ namespace JLT.Floorplan.DAL
             try
             {
                 DataTable dt = new DataTable();
-                parameters.Add("p_seatid", objbuildingfloor.Floor.floorid, ParameterDirection.Input);
-                parameters.Add("p_seatlabel", objbuildingfloor.Floor.floorname, ParameterDirection.Input);
-                parameters.Add("p_booked", objbuildingfloor.Building.buildingname, ParameterDirection.Input);
-                using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_seat, parameters))
+                parameters.Add("p_floorid", objbuildingfloor.Floor.floorid, ParameterDirection.Input);
+                parameters.Add("p_floorname", objbuildingfloor.Floor.floorname, ParameterDirection.Input);
+                parameters.Add("p_buildingname", objbuildingfloor.Building.buildingname, ParameterDirection.Input);
+                parameters.Add("p_isactive", objbuildingfloor.Floor.isactive, ParameterDirection.Input);
+                using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_floor, parameters))
                 {
                     dt = db.Load(reader, true);
                 }
                 return CommonUtility.ToList<buildingfloor>(dt);
+            }
+            catch (MySqlException odbcEx)
+            {
+                throw odbcEx;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally { db.CloseConnection(conn); }
+        }
+
+        public int AllocateSeat(seatallocation objseatallocation)
+        {
+            MySqlDatabaseFactory db = new MySqlDatabaseFactory();
+            Parameters parameters = new Parameters();
+            MySqlConnection conn = db.GetDatabaseConnection();
+            try
+            {
+                DataTable dt = new DataTable();
+                parameters.Add("p_allocationid", objseatallocation.allocationid, ParameterDirection.Input);
+                parameters.Add("p_employeeno", objseatallocation.employeeno, ParameterDirection.Input);
+                parameters.Add("p_seatid", objseatallocation.seatno, ParameterDirection.Input);
+                parameters.Add("p_startdate", objseatallocation.startdate, ParameterDirection.Input);
+                parameters.Add("p_enddate", objseatallocation.enddate, ParameterDirection.Input);
+
+                int result;
+                using (MySqlTransaction tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        result = db.ExecuteNonQuery(conn, tran, CommandType.StoredProcedure, Constants.StoredProcedures.uasp_seatallocation, parameters);
+                        tran.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        tran.Rollback();
+                        throw ex;
+                    }
+                }
+                return result;
             }
             catch (MySqlException odbcEx)
             {
