@@ -3,8 +3,6 @@
     var UserId = JLT.Common.Utility.CommonUtility.LoggedInUser.id;
     var UserRole = JLT.Common.Utility.CommonUtility.LoggedInUser.role;
     var AdminRole = Convert.ToUInt64(JLT.Common.Utility.Enums.UserRoles.Admin);
-    var ProctorRole = Convert.ToUInt64(JLT.Common.Utility.Enums.UserRoles.Proctor);
-    var AuthRole = Convert.ToUInt64(JLT.Common.Utility.Enums.UserRoles.Authorizer);
 }
 
 <!DOCTYPE html>
@@ -221,15 +219,6 @@
                                     <span>Manage Users</span>
                                 </a>
                             </li>
-                            @if ((UserRole & AuthRole) == AuthRole)
-                            {
-                                <li>
-                                    <a href="@Url.Action("Index", "Authorize")">
-                                        <i class="glyphicon glyphicon-ok"></i>
-                                        <span>Authorization</span>
-                                    </a>
-                                </li>
-                            }
 
                         </ul>
                     </nav>

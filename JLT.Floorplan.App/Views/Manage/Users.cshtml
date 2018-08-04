@@ -5,8 +5,8 @@
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
     var Adminrole = Convert.ToInt32(Enums.UserRoles.Admin);
-    var Authrole = Convert.ToInt32(Enums.UserRoles.Authorizer);
-    var Proctorrole = Convert.ToInt32(Enums.UserRoles.Proctor);
+    var Authrole = Convert.ToInt32(Enums.UserRoles.Manager);
+    var Proctorrole = Convert.ToInt32(Enums.UserRoles.TeamMember);
     var emailregex = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.EamilRegEx);
 }
 

@@ -52,6 +52,7 @@ namespace JLT.Floorplan.DAL
             {
                 DataTable dt = new DataTable();
                 parameters.Add("p_seatid", objseat.seatid, ParameterDirection.Input);
+                parameters.Add("p_floorid", objseat.floorid, ParameterDirection.Input);
                 parameters.Add("p_seatlabel", objseat.seatlabel, ParameterDirection.Input);
                 parameters.Add("p_booked", objseat.isbooked, ParameterDirection.Input);
                 using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_seat, parameters))
@@ -80,10 +81,10 @@ namespace JLT.Floorplan.DAL
             try
             {
                 DataTable dt = new DataTable();
-                parameters.Add("p_floorid", objbuildingfloor.Floor.floorid, ParameterDirection.Input);
-                parameters.Add("p_floorname", objbuildingfloor.Floor.floorname, ParameterDirection.Input);
-                parameters.Add("p_buildingname", objbuildingfloor.Building.buildingname, ParameterDirection.Input);
-                parameters.Add("p_isactive", objbuildingfloor.Floor.isactive, ParameterDirection.Input);
+                parameters.Add("p_floorid", objbuildingfloor.floorid, ParameterDirection.Input);
+                parameters.Add("p_floorname", objbuildingfloor.floorname, ParameterDirection.Input);
+                parameters.Add("p_buildingname", objbuildingfloor.buildingname, ParameterDirection.Input);
+                parameters.Add("p_isactive", objbuildingfloor.isactive, ParameterDirection.Input);
                 using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_floor, parameters))
                 {
                     dt = db.Load(reader, true);
@@ -141,6 +142,34 @@ namespace JLT.Floorplan.DAL
             }
             finally { db.CloseConnection(conn); }
         }
+
+        public dashboard GetDashboard(string floorid)
+        {
+            MySqlDatabaseFactory db = new MySqlDatabaseFactory();
+            Parameters parameters = new Parameters();
+            MySqlDataReader reader = null;
+            MySqlConnection conn = db.GetDatabaseConnection();
+            try
+            {
+                DataTable dt = new DataTable();
+                parameters.Add("p_floorid", floorid, ParameterDirection.Input);
+                using (reader = db.GetReader(conn, CommandType.StoredProcedure, Constants.StoredProcedures.ussp_dashboard, parameters))
+                {
+                    dt = db.Load(reader, true);
+                }
+                return CommonUtility.ToList<dashboard>(dt).FirstOrDefault();
+            }
+            catch (MySqlException odbcEx)
+            {
+                throw odbcEx;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally { db.CloseConnection(conn); }
+        }
+
         public void Dispose() { }
     }
 }

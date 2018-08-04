@@ -35,6 +35,7 @@ namespace JLT.Common.Utility
             public const string  ussp_leave= "ussp_leave";
             public const string  uasp_seatallocation= "uasp_seatallocation";
             public const string ussp_floor = "ussp_floor";
+            public const string ussp_dashboard = "ussp_dashboard";
         }
 
         /********************************************** SMS Keys *****************************************************************/

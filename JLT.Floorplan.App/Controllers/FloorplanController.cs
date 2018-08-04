@@ -13,8 +13,8 @@ namespace JLT.Floorplan.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.PageTitle = "Manage Floor Plan";
-            ViewBag.Title = "Manage Floor Plan";
+            ViewBag.PageTitle = "Manage Seat Plan";
+            ViewBag.Title = "Manage Seat Plan";
             return View();
         }
 

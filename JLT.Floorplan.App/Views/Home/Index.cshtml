@@ -6,142 +6,106 @@
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
     var Userrole = JLT.Common.Utility.CommonUtility.LoggedInUser.role;
     var Adminrole = Convert.ToInt32(Enums.UserRoles.Admin);
-    var Authrole = Convert.ToInt32(Enums.UserRoles.Authorizer);
-    var Proctorrole = Convert.ToInt32(Enums.UserRoles.Proctor);
     var UserId = CommonUtility.LoggedInUser.id;
     var WebSocketServer = CommonUtility.GetAppSettingKey(Constants.WebSocketKeys.WebSocketServer);
 }
 
 <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
-    app.settings.asideFolded = false; 
+    app.settings.asideFolded = false;
     app.settings.asideDock = false;">
-  <!-- main -->
-  <div class="col">
-    <!-- main header -->
-    <div class="bg-light lter b-b wrapper-md">
-      <div class="row">
-        <div class="col-sm-6 col-xs-12">
-          <h1 class="m-n font-thin h3 text-black" id="page_header">Dashboard</h1>
-          <small class="text-muted">Welcome to Seat Management Solution</small>
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black" id="page_header">Dashboard</h1>
+                    <small class="text-muted">Welcome to Seat Management Solution</small>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <!-- / main header -->
-    <div class="wrapper-md">
-      <!-- stats -->
-      <div id="admin">
-          <div class="row">
-              <div class="col-md-12">
-                  <div class="row row-sm text-center">
-                      <div class="panel wrapper">
-                          <div class="input-group m-t-sm width-95pc-imp">
-                              <select class="form-control" id="ddlFloor" >
-                                  <option selected="selected">Select Floor</option>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row row-sm text-center">
-                <div class="col-xs-6">
-                  <div class="panel padder-v item">
-                    <div class="h1 text-info font-thin h1" id="spn_live_examinee">0</div>
-                    <span class="text-muted text-xs">Total Seats</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- stats -->
+            <div id="admin">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row row-sm text-center">
+                            <div class="panel wrapper">
+                                <div class="input-group m-t-sm width-95pc-imp">
+                                    <select class="form-control" id="ddlFloor">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div class="col-xs-6">
-                  <div class="panel padder-v bg-success item">
-                    <div class="h1 font-thin h1" id="spn_exam_ended">0</div>
-                    <span class="text-muted text-xs">Occupied Seats</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row row-sm text-center">
+                            <div class="col-xs-6">
+                                <div class="panel padder-v item">
+                                    <div class="h1 text-info font-thin h1" id="spn_totalseats">0</div>
+                                    <span class="text-muted text-xs">Total Seats</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="panel padder-v bg-success item">
+                                    <div class="h1 font-thin h1" id="spn_ocuupiedseats">0</div>
+                                    <span class="text-muted text-xs">Occupied Seats</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="panel padder-v bg-info item">
+                                    <div class="h1 font-thin h1" id="spn_vacantseats">0</div>
+                                    <span class="text-muted text-xs">Unallocated Seats</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="panel padder-v bg-danger item">
+                                    <div class="font-thin h1" id="spn_morethan10daysseats">0</div>
+                                    <span class="text-muted text-xs">Seats unoccupied + available for >10 days</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="panel padder-v bg-dark item">
+                                    <div class="h1 text-info font-thin h1" id="spn_morethan5daysseats">0</div>
+                                    <span class="text-muted text-xs">Seats available for >5 days</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="panel padder-v bg-primary item">
+                                    <div class="font-thin h1" id="spn_lessthan5daysseats">0</div>
+                                    <span class="text-muted text-xs">Seats available for &lt=5 days</span>
+                                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
+                                        <i class="fa fa-refresh text-muted m-r-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div class="col-xs-6">
-                  <div class="panel padder-v bg-info item">
-                    <div class="h1 font-thin h1" id="spn_auth_queue">0</div>
-                    <span class="text-muted text-xs">Vacant Seats</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-6">
-                  <div class="panel padder-v bg-danger item">
-                    <div class="font-thin h1" id="spn_proctor_queue">0</div>
-                    <span class="text-muted text-xs">Seats available for >10 days</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-6">
-                  <div class="panel padder-v item">
-                    <div class="h1 text-info font-thin h1" id="spn_live_auth">0</div>
-                    <span class="text-muted text-xs">Seats available for >5 days</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-6">
-                  <div class="panel padder-v bg-primary item">
-                    <div class="font-thin h1" id="spn_live_proc">0</div>
-                    <span class="text-muted text-xs">Seats available for &lt5 days</span>
-                    <div class="bottom text-right w-full cursor-pointer refresh-dash">
-                      <i class="fa fa-refresh text-muted m-r-sm"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-            @*<div class="col-md-7">
-              <div class="panel wrapper">
-                <h4 class="font-thin m-t-none m-b text-muted">Broadcast Massege to all candidates</h4>
-                <div class="m-t-sm" id="divBroadcastMsg"></div>
-                <div class="input-group m-t-sm width-95pc-imp">
-                    <input type="text" class="form-control" id="txtBroadcastMsg" placeholder="Enter broadcast message"/>
-                    <span class="input-group-addon cursor-pointer" id="btnSendBroadcastMsg">Send</span>
-                </div>
-              </div>
-            </div>*@
-          </div>
-      </div>
-      
-      <!-- / stats -->
+
+            <!-- / stats -->
+        </div>
     </div>
-  </div>
-  <!-- / main -->
-  <!-- right col -->
-      @*<div class="col w-md bg-white-only b-l bg-auto no-border-xs" id="rt_UserList">
-  	    <div class="nav-tabs-alt">
-	  	    <ul class="nav nav-tabs" role="tablist">
-		        <li class="active"><a href="#follow" data-toggle="tab"><i class="glyphicon glyphicon-user text-md text-muted wrapper-sm"></i></a></li>
-		      </ul>
-	      </div>
-        <div class="tab-content">
-          <div class="tab-pane active" id="follow">
-            <div class="wrapper-md div-height-380px scroll-y">
-              <div class="m-b-sm text-md">System Users</div>
-              <ul class="list-group no-bg no-borders pull-in" id="ul_users">
-                
-              </ul>
-              <div class="text-center">
-                <a href class="btn btn-sm btn-primary padder-md m-b">More Connections</a>
-              </div>
-            </div>
-          </div>    
-        </div> 
-      </div>*@
-  
-  <!-- / right col -->
+    <!-- / main -->
 </div>
 
 @section Scripts {
@@ -149,90 +113,38 @@
         (function () {
             "use strict";
             var apiurl = '@RestAPI',
-                baseURL = '@Url.Action("Index","Home")',
-                wss_connected = false,
-                peer_connection = null, //rtc_peer_connection object
-                peer_connections = [],
-                signaling_server = null, // signaling server for this call
-                signal_server_connection_count = 0,
-                webrtc_capable = true,
-                rtc_peer_connection = null,
-                rtc_session_description = null,
-                rtc_ice_candidate = null,
-                get_user_media = null,
-                connect_stream_to_src = null,
-                localMediaStream = null,
-                local_stream_added = false,
-                webcam_initiated = false,
-                call_token = null,
-                stun_server = "stun.l.google.com:19302";
-            /************************************************* document.ready [Start] *************************************************************/
-            $(document).ready(function () {
-                $(".no-dashboard").addClass("hide");
-                //CommonMethods.Init();
-                //CommonMethods.SendBroadcastMsg();
-                //CommonMethods.RefreshDashboard();
-            });
-            /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+                baseURL = '@Url.Action("Index","Home")';
+                /************************************************* document.ready [Start] *************************************************************/
+                $(document).ready(function () {
+                    $(".no-dashboard").addClass("hide");
+                    CommonMethods.Init();
+                    CommonMethods.RefreshDashboard();
+                });
+                /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
             var CommonMethods = {
                 Init: function () {
                     try {
-                        if((@Userrole & @Adminrole) == @Adminrole){
-                            if (sessionStorage['_users']) {
-                                CommonMethods.PopulateUsers($.parseJSON(sessionStorage['_users']));
-                            } else {
-                                AjaxCalls.GetUsers();
-                            }  
-                            WSServer.ConnectServer(WSServer.GetLiveUsers);   
-                            CommonMethods.PopulateBroadcastMsg(); //Populate broadcast msges
-                            AjaxCalls.GetDashboard();
-                        } else{
-                            $('#admin').addClass('hide');
-                            $('#rt_UserList').addClass('hide');
-                            $('#page_header').text('Instructions');
-                        } 
-                    } catch (e) { };                                     
-                    $("#txtBroadcastMsg").keyup(function(event){
-                        if(event.keyCode == 13){
-                            $("#btnSendBroadcastMsg").click();
+                        if (sessionStorage['_floors']) {
+                            CommonMethods.Populatefloors($.parseJSON(sessionStorage['_floors']));
+                        } else {
+                            AjaxCalls.Getfloors();
                         }
-                    });      
+                        AjaxCalls.GetDashboard();
+                    } catch (e) { };
                 },
-                PopulateUsers: function (lstUsers) {                    
-                    var role = '', userHtml = '', userList = null;
-                    for(var i=0; i < lstUsers.length; i++){
-                        if(lstUsers[i].id != @UserId){
-                            role = ''; userHtml = '';
-                            role = (lstUsers[i].role & @Adminrole) == @Adminrole ? 'Admin, ' : '';
-                            role += ((lstUsers[i].role & @Authrole) == @Authrole ? 'Authriser, ' : '');
-                            role += ((lstUsers[i].role & @Proctorrole) == @Proctorrole ? 'Proctor, ' : '');
-                            if(role.length > 0) {
-                                role = role.substring(0, role.length - 2);
-                            } else {
-                                role ="No role assigned";
-                            }
-                            userHtml = '<div class="pull-left thumb-sm avatar m-r"><img src="img/' + lstUsers[i].profilepic + '" class="img-circle"><i id="userstatus_' + lstUsers[i].id + '" class=" b-white bottom userStatus"></i></div>'; // on,busy,away
-                            userHtml = userHtml + '<div class="clear"><div>' + lstUsers[i].firstname + ' ' + lstUsers[i].lastname + '</div><small class="text-muted">' + role + '</small></div>';
-                            userList = $('<li>').addClass('list-group-item').html(userHtml);
-                            $('#ul_users').append(userList);
-                        }
+                  Populatefloors: function (floors) {
+                    var userHtml = '', userList = null;
+                      for (var i = 0; i < floors.length; i++){
+                        $('#ddlFloor')
+                            .append($("<option></option>")
+                                .attr("value", floors[i].floorid)
+                                .text(floors[i].floorname + ' (' + floors[i].buildingname+')'));
                     }
                 },
-                SendBroadcastMsg: function(){
-                    $('#btnSendBroadcastMsg').on('click',function(){
-                        if($('#txtBroadcastMsg').val().trim().length > 0){
-                            var msg = $('#txtBroadcastMsg').val().trim();
-                            $('#txtBroadcastMsg').val('');
-                            WSServer.SendAdminBroadcast(msg);
-                            CommonMethods.PopulateBroadcastMsg();
-                            AjaxCalls.SaveBroadcastLog(msg);
-                        }
-                    });
-                },
-                CoverScreen: function(Message){
-                    Message = Message || '';
+                CoverScreen: function(message){
+                    message = message || '';
                     var divCover = $('<div>').addClass('signal-svr-err-screen').attr({"id": "divScreenCover"});
-                    var divMsg = $('<div>').addClass('signal-svr-err-msg').attr({"id": "divScreenCoverMsg"}).html(Message);
+                    var divMsg = $('<div>').addClass('signal-svr-err-msg').attr({ "id": "divScreenCoverMsg" }).html(message);
                     $('body').append(divCover.append(divMsg));
                 },
                 CoverScreenChangeMsg: function(Message){
@@ -241,187 +153,39 @@
                 RemoveScreenCover: function(){
                     $('#divScreenCover').remove();
                 },
-                SaveBroadcastMsg: function(message){
-                    if(!sessionStorage['_admin_broadcastmessage']){
-                        sessionStorage.setItem('_admin_broadcastmessage', '[]');
-                    }
-                    var ChatJson = $.parseJSON(sessionStorage['_admin_broadcastmessage'])
-            
-                    var objMsg = {};
-                    objMsg.message = message;
-                    ChatJson.push(objMsg);
-
-                    sessionStorage.setItem('_admin_broadcastmessage', JSON.stringify(ChatJson));
-                },
-                PopulateBroadcastMsg: function(){
-                    $('#divBroadcastMsg').html('');
-                    var p_msg = null;
-                    if(sessionStorage['_admin_broadcastmessage']){
-                        var ChatMsg = $.parseJSON(sessionStorage['_admin_broadcastmessage']);
-                        if(ChatMsg){
-                            ChatMsg.forEach(function (objMsg) {
-                                p_msg = $('<p>').html('<span class="f-green bold-font">Broadcast: </span>' + objMsg.message);
-                                $('#divBroadcastMsg').append(p_msg);
-                            });
-                            var elem = document.getElementById('divBroadcastMsg');
-                            elem.scrollTop = elem.scrollHeight;
-                        }
-                    }
-                },
                 RefreshDashboard: function(){
                     $('.refresh-dash').on('click',function(){
-                        WSServer.GetLiveUsers();
                         AjaxCalls.GetDashboard();
-                    });                    
+                    });
                 },
-                UpdateUserStatus: function(LiveAuth,LiveProc){
-                    $('.userStatus').removeClass('on');
-                    var liveAuth = '';
-                    var liveProc = '';
-                    if(LiveAuth.length > 0) liveAuth = LiveAuth.substring(0, LiveAuth.length - 1);
-                    if(LiveProc.length > 0) liveProc = LiveProc.substring(0, LiveProc.length - 1);
-                    liveAuth = liveAuth.split(',');
-                    liveProc = liveProc.split(',');
-                    for(var i=0; i < liveAuth.length; i++){
-                        $('#userstatus_' + liveAuth[i]).addClass('on');
-                    }
-                    for(var i=0; i < liveProc.length; i++){
-                        $('#userstatus_' + liveProc[i]).addClass('on');
-                    }
-                }
+
             };
-            /************************************************* CommonMethods [Ends], WSServer [Start] *************************************************************/
-            var WSServer = {
-                ConnectServer: function(callback){
-                    //Code for Signaling Server connection
-                    console.log("setting up connection to signaling server");
-                    if (signaling_server) {
-                        signaling_server.close(3001);
-                    }
-                    signaling_server = new WebSocket('@WebSocketServer');
-                    signaling_server.onopen = function () {
-                        wss_connected = true;
-                        // setup caller signal handler
-                        signaling_server.onmessage = WSServer.Handler;
-                        console.log("Connected to signaling Server");
-                        if(signal_server_connection_count > 0){
-                            CommonMethods.RemoveScreenCover();
-                        }
-                            // tell the signaling server you have joined the call 
-                        console.log("sending admin 'join' signal for adminid: " + @UserId);
-                        signaling_server.send(
-                            JSON.stringify({
-                                token: '',
-                                type: "join_admin",
-                                adminid: @UserId
-                            })
-                        );
-                        if(callback)callback();
-                    }
-                    signaling_server.onerror = function(event){
-                        console.log(event);
-                        if(signal_server_connection_count == 0){
-                            CommonMethods.CoverScreen('Please wait, connecting server: attempt 1 or 20 ...<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>');
-                        } 
-                        if(signal_server_connection_count < 20){
-                            signal_server_connection_count += 1;
-                            CommonMethods.CoverScreenChangeMsg('Please wait, connecting server: attempt ' + signal_server_connection_count + ' of 20 ...<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>');
-                            setTimeout(function () {
-                                WSServer.ConnectServer();
-                            }, 10000); // 10 seconds
-                        } else{
-                            CommonMethods.CoverScreenChangeMsg('<i class="fa fa-warning fa-3x fa-fw"></i> Server not responding, contact admin');
-                        }
-                    } 
-                    signaling_server.onclose = function (event) {
-                        console.log(event);
-                    }
-                },
-                Handler: function(event){
-                    var signal = JSON.parse(event.data);
-                    console.log(signal.type);
-                    if(signal.type === "get_live_users") { 
-                        $('#spn_live_auth').text(signal.liveauth);
-                        $('#spn_live_proc').text(signal.liveproctor);
-                        CommonMethods.UpdateUserStatus(signal.authids,signal.proctorids);
-                    } else if(signal.type === "rejoin_examinee") { 
-                        //CommonMethods.AddNewCandidate(signal);
-                    }
-                },
-                SendAdminBroadcast: function(broadcastMsg, ExamineeId){
-                    console.log("Broadcasting msg:" + broadcastMsg);
-                    CommonMethods.SaveBroadcastMsg(broadcastMsg);
-                    signaling_server.send(
-                        JSON.stringify({
-                            token: '',
-                            type: "broadcast_superproctor_msg",
-                            adminid: @UserId,
-                            message: broadcastMsg
-                        })
-                    );
-                },
-                GetLiveUsers: function(){
-                    if(wss_connected){
-                        console.log("Requested WSS for live auth & proc count");
-                        signaling_server.send(
-                            JSON.stringify({
-                                token: '',
-                                type: "get_live_users",
-                                adminid: @UserId
-                            })
-                        );
-                    }
-                }
-            };
-            /************************************************* WSServer [Ends], AjaxCalls [Start] *************************************************************/
             var AjaxCalls = {
-                GetUsers: function () {
-                    var postData = "{ }";
+                Getfloors: function () {
+                    var postData = {isactive:true };
                     $.ajax({
-                        url: apiurl + "Account/GetUsers",
+                        url: apiurl + "Masters/Getfloor",
                         type: "POST",
-                        async: true,
+                        async: false,
                         crossDomain: true,
                         beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
                         datatype: "json",
-                        data: JSON.stringify(postData),
-                        contentType: "application/json",
+                        data:"=" +JSON.stringify(postData),
+                        contentType: "application/x-www-form-urlencoded",
                         success: function (data) {
-                            sessionStorage.setItem('_users', data.body);
-                            CommonMethods.PopulateUsers($.parseJSON(data.body));
+                            sessionStorage.setItem('_floors', data.body);
+                            CommonMethods.Populatefloors($.parseJSON(data.body));
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
-                            e = $.parseJSON(xhr.responseText);
-                            alert(e.message);
+                           // e = $.parseJSON(xhr.responseText);
+                            alert(thrownError);
                         }
                     });
-                },        
-                SaveBroadcastLog: function(broadcastMsg) {
-                    var formJson = {};
-                    formJson.examineeid = @UserId;
-                    formJson.msgtype = 7;
-                    formJson.message = broadcastMsg;
-                    var p_data = JSON.stringify(formJson);
-                    $.ajax({
-                        url: apiurl + 'Proctoring/SaveBroadcastLog',
-                        type: 'Post',
-                        data: "=" + p_data,
-                        async: true,
-                        crossDomain: true,
-                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
-                        contentType: "application/x-www-form-urlencoded",
-                        dataType: "json",
-                        success: function (data) {
-                
-                        },
-                        error: function (jqHXR, textStatus, errorThrown) {
-
-                        }
-                    })//Ajax call ends
                 },
+
                 GetDashboard: function() {
                     $.ajax({
-                        url: apiurl + 'Proctoring/GetDashboard',
+                        url: apiurl + 'Masters/GetDashboard?floorid=' + $("#ddlFloor").val(),
                         type: 'Get',
                         data: "",
                         async: true,
@@ -431,10 +195,12 @@
                         dataType: "json",
                         success: function (data) {
                             var dashboard = $.parseJSON(data.body);
-                            $('#spn_live_examinee').text(dashboard.livecandidates);
-                            $('#spn_exam_ended').text(dashboard.examended);
-                            $('#spn_auth_queue').text(dashboard.authqueue);
-                            $('#spn_proctor_queue').text(dashboard.proctorqueue);
+                            $('#spn_totalseats').text(dashboard.totalseat);
+                            $('#spn_ocuupiedseats').text(dashboard.occupiedseat);
+                            $('#spn_vacantseats').text(dashboard.vacantseat);
+                            $('#spn_morethan10daysseats').text(dashboard.seatavailablemorethan10days);
+                            $('#spn_morethan5daysseats').text(dashboard.seatavailablemorethan5days);
+                            $('#spn_lessthan5daysseats').text(dashboard.seatavailablelessthan5days);
 
                         },
                         error: function (jqHXR, textStatus, errorThrown) {

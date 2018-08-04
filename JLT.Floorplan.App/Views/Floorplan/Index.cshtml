@@ -1,13 +1,24 @@
 ﻿@using JLT.Common.Utility;
 @{
-    ViewBag.Title = "Floor Plan";
+    ViewBag.Title = "Seat Plan";
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
 
 }
 <link rel="stylesheet" href="@Url.Content("~/css/fp.css")" type="text/css" />
 <link rel="stylesheet" href="@Url.Content("~/css/jquery.seat-charts.css")" type="text/css" />
-<div class="wrapper">
+<div class="wrapper-md">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row row-sm text-center">
+                <div class="panel wrapper">
+                    <div class="input-group m-t-sm width-95pc-imp">
+                        <select class="form-control" id="ddlFloor"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div id="seat-map">
             <div class="" style="width:98%"><i class="fa fa-arrow-down"></i><span style="padding:10px">ENTRY</span> <i class="fa fa-arrow-down"></i></div>
@@ -50,66 +61,13 @@
     firstSeatLabel = 0;
     var previd = '';
     $(document).ready(function () {
-        var AjaxCalls = {
-            GetSeats: function () {
-                var postData = {};
-                $.ajax({
-                    url: apiurl + "Masters/Getseats",
-                    type: "POST",
-                    async: false,
-                    crossDomain: true,
-                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
-                    datatype: "json",
-                    data: "=" + JSON.stringify(postData),
-                    contentType: "application/x-www-form-urlencoded",
-                    success: function (data) {
-                        //alert(data.body);
-                        seats = $.parseJSON(data.body);
-                        var row = 1;
-                        var col = 1;
-                        var e = '';
-                        $.each(seats, function (i, s) {
-                            if (s.isbooked) booked.push(s.seatid);
-                            if (s.rowno == row) {
-                                if (s.columnno == col) {
-                                    e = e + 'f[' + s.seatid + ',' + s.seatlabel+ ']';
-                                }
-                                else {
-                                    for (var j = 0; j < (s.columnno - col); j++) {
-                                        e = e + '_';
-                                    }
-                                    e = e + 'f[' + s.seatid + ',' + s.seatlabel  +  ']';
-                                }
-                                col = s.columnno + 1;
-                            } else {
-                                seatmap.push(e);
-                                e = '';
-                                row = s.rowno;
-                                col = 1;
-                                if (s.rowno == row) {
-                                    if (s.columnno == col) {
-                                        e = e + 'f[' + s.seatid + ',' + s.seatlabel  + ']';
-                                    }
-                                    else {
-                                        for (var j = 0; j < (s.columnno - col); j++) {
-                                            e = e + '_';
-                                        }
-                                        e = e + 'f[' + s.seatid + ',' + s.seatlabel  + ']';
-                                    }
-                                    col = s.columnno + 1;
-                                }
-                            }
-                            //seatmap.push()
-                        });
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        var e = $.parseJSON(xhr.responseText);
-                        alert(e.message);
-                    }
-                });
-            },
-        }
-
+        try {
+            if (sessionStorage['_floors']) {
+                AjaxCalls.Populatefloors($.parseJSON(sessionStorage['_floors']));
+            } else {
+                AjaxCalls.Getfloors();
+            }
+        } catch (e) { };
         AjaxCalls.GetSeats();
         var $cart = $('#selected-seats'),
             $counter = $('#counter'),
@@ -217,5 +175,94 @@
             });
         });
     });
+    var AjaxCalls = {
+            GetSeats: function () {
+                var postData = { floorid: $('#ddlFloor').val()};
+                $.ajax({
+                    url: apiurl + "Masters/Getseats",
+                    type: "POST",
+                    async: false,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(postData),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        //alert(data.body);
+                        seats = $.parseJSON(data.body);
+                        var row = 1;
+                        var col = 1;
+                        var e = '';
+                        $.each(seats, function (i, s) {
+                            if (s.isbooked) booked.push(s.seatid);
+                            if (s.rowno == row) {
+                                if (s.columnno == col) {
+                                    e = e + 'f[' + s.seatid + ',' + s.seatlabel+ ']';
+                                }
+                                else {
+                                    for (var j = 0; j < (s.columnno - col); j++) {
+                                        e = e + '_';
+                                    }
+                                    e = e + 'f[' + s.seatid + ',' + s.seatlabel  +  ']';
+                                }
+                                col = s.columnno + 1;
+                            } else {
+                                seatmap.push(e);
+                                e = '';
+                                row = s.rowno;
+                                col = 1;
+                                if (s.rowno == row) {
+                                    if (s.columnno == col) {
+                                        e = e + 'f[' + s.seatid + ',' + s.seatlabel  + ']';
+                                    }
+                                    else {
+                                        for (var j = 0; j < (s.columnno - col); j++) {
+                                            e = e + '_';
+                                        }
+                                        e = e + 'f[' + s.seatid + ',' + s.seatlabel  + ']';
+                                    }
+                                    col = s.columnno + 1;
+                                }
+                            }
+                            //seatmap.push()
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        alert(e.message);
+                    }
+                });
+        },
+           Getfloors: function () {
+                    var postData = {isactive:true };
+                    $.ajax({
+                        url: apiurl + "Masters/Getfloor",
+                        type: "POST",
+                        async: false,
+                        crossDomain: true,
+                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                        datatype: "json",
+                        data:"=" +JSON.stringify(postData),
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data) {
+                            sessionStorage.setItem('_floors', data.body);
+                            CommonMethods.Populatefloors($.parseJSON(data.body));
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                           // e = $.parseJSON(xhr.responseText);
+                            alert(thrownError);
+                        }
+                    });
+        },
+        Populatefloors: function (floors) {
+            var userHtml = '', userList = null;
+            for (var i = 0; i < floors.length; i++) {
+                $('#ddlFloor')
+                    .append($("<option></option>")
+                        .attr("value", floors[i].floorid)
+                        .text(floors[i].floorname + ' (' + floors[i].buildingname + ')'));
+            }
+        },
+        }
 
 </script>

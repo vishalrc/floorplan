@@ -28,7 +28,7 @@ namespace JLT.Common.Utility
         {
             Admin = 1,
             Manager = 2,
-            Teammember= 3,
+            Teammember = 3,
             Common = 5
         }
 
@@ -36,8 +36,8 @@ namespace JLT.Common.Utility
         {
             General = 1,
             Admin = 15,
-            Authorizer = 17,
-            Proctor = 33
+            Manager = 17,
+            TeamMember = 33
         }
 
         public enum Severity

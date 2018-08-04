@@ -2,7 +2,7 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ussp_seat`(
 p_seatid int,
 p_seatlabel varchar(50),
-
+p_floorid int,
 p_booked tinyint
 )
 BEGIN
@@ -17,8 +17,9 @@ select s.`seatid`, `seatlabel`, `cubicalno`,
         left join seatvacancy l on e.associateno=l.associateno
 				and cast(now() as date) between l.startdate and l.enddate 
         where  (s.seatid=p_seatid or p_seatid  is null)
-	          AND(s.seatlabel=p_seatlabel or p_seatlabel is null)
-              order by s.rowno, s.columnno;
+	        AND(s.seatlabel=p_seatlabel or p_seatlabel is null)
+			AND(s.floorid=p_floorid or p_floorid is null)
+	    order by s.rowno, s.columnno;
 
 END$$
 DELIMITER ;

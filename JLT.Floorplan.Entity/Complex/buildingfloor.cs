@@ -8,8 +8,11 @@ namespace JLT.Floorplan.Entity
 {
     public class buildingfloor
     {
-        public building Building { get; set; }
-        public floor Floor { get; set; }
+        public int? floorid { get; set; }
+        public string  floorname { get; set; }
+        public string buildingname { get; set; }
+        public string buildingcode { get; set; }
+        public bool isactive { get; set; }
     }
 }
 
