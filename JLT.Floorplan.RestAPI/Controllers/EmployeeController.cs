@@ -17,9 +17,9 @@ namespace JLT.RestAPI.Controllers
     {
      
         [HttpPost]
-        [ActionName("SaveExaminee")]
+        [ActionName("SaveEmployee")]
         //[VTAuthorizeAttribute(Actions = Enums.Action.General)]
-        public HttpResponseMessage SaveExaminee(HttpRequestMessage request, [FromBody]string value)
+        public HttpResponseMessage SaveEmployee(HttpRequestMessage request, [FromBody]string value)
         {
             try
             {
@@ -146,9 +146,9 @@ namespace JLT.RestAPI.Controllers
 
         
         [HttpPost]
-        [ActionName("GetExaminee")]
+        [ActionName("GetEmployee")]
         [VTAuthorizeAttribute(Actions = Enums.Action.General)]
-        public HttpResponseMessage GetExaminee(HttpRequestMessage request, [FromBody]string value)
+        public HttpResponseMessage GetEmployee(HttpRequestMessage request, [FromBody]string value)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace JLT.RestAPI.Controllers
                             (new APIResponseBody
                             {
                                 type = "success:" + request.RequestUri,
-                                body = CommonUtility.Serialize<List<Employee>>(lstEntity),
+                                body = CommonUtility.Serialize(lstEntity),
                                 message = "success",
                                 code = 1,
                                 subcode = 0

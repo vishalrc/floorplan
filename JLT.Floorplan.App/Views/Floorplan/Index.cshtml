@@ -31,7 +31,7 @@
             <h2>Seat Details</h2>
 
             <h3> Selected Seats</h3>
-            <ul id="selected-seats"></ul>
+            <ul id="selected-seats" style="min-height:25px"></ul>
             <div style="width:100px">
                 <label class="col-sm-2 control-label">Date</label>
                 <div class="col-sm-10">
@@ -40,7 +40,11 @@
                 <div style="clear:both"></div>
                 <div style="width:150px">
                     <label class="col-sm-2 control-label">Employee#</label>
-                    <div class="col-sm-10"><input id="employeeno" type="number" class="form-control rounded" /> </div>
+                    <div class="col-sm-10">
+                        <input id="employeeno" type="text" maxlength="100" name="q" accesskey="b"  autocomplete="off" placeholder="Emloyee name" role="textbox" aria-autocomplete="list" aria-haspopup="true"
+                               class="form-control w-md rounded" />
+                        <input id="hdnemployeeno" type="hidden"/>
+                    </div>
                 </div><p style="clear:both"></p>
                 <div class="col-sm-10">
                     <button id="allocateseat" class="btn btn-success">Allocate &raquo;</button>
@@ -61,6 +65,40 @@
     firstSeatLabel = 0;
     var previd = '';
     $(document).ready(function () {
+        
+        $("#employeeno").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: apiurl + "Employee/GetEmployee",
+                    type: "POST",
+                    async: false,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify({ name: request.term }),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                       var d= $.parseJSON(data.body)
+                        response($.map(d, function (item) {
+                            return {
+                                label: item.name,
+                                value: item.associateno
+                            }
+                        }))
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("Error");
+                    }
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                $("#employeeno").val(ui.item.label); // display the selected text
+                $("#hdnemployeeno").val(ui.item.value); // save selected id to hidden input
+                return false;
+            },
+        });
+
         try {
             if (sessionStorage['_floors']) {
                 AjaxCalls.Populatefloors($.parseJSON(sessionStorage['_floors']));
@@ -83,7 +121,7 @@
                 naming: {
                     top: false,
                     getLabel: function (character, row, column) {
-                       
+
                     },
                 },
                 legend: {
@@ -140,8 +178,11 @@
         sc.get(booked).status('unavailable');
 
         $('#allocateseat').on('click', function () {
-            if ($('#employeeno').val() == ''  || $('#daterange').val()=='') {
-                alert('Please provide required fields!'); return
+            if ($('#hdnemployeeno').val() == '') {
+                alert('Please select valid employee!'); return
+            }
+            if ($('#daterange').val() == '') {
+                alert('Please select valid date range!'); return
             }
             if ($('ul#selected-seats li:first').text() == '') {
                 alert('Please select seat!'); return
@@ -149,7 +190,7 @@
 
             var model = {
                 seatno: $('ul#selected-seats li:first').attr('seatid'), startdate: $('#daterange').val().split(' - ')[0], enddate: $('#daterange').val().split(' - ')[1]
-                , employeeno: $('#employeeno').val()
+                , employeeno: $('#hdnemployeeno').val()
             };
             $.ajax({
                 url: apiurl + "Masters/allocateseat",

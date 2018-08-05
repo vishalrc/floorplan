@@ -20,8 +20,9 @@ namespace JLT.Floorplan.Entity
         public string ut4 { get; set; }
         public string ut5 { get; set; }
         public string departmentid { get; set; }
+        public string departmentname { get; set; }
         public byte[] photo { get; set; }
-        public bool isactive { get; set; }
+        public bool? isactive { get; set; }
         public void Dispose()
         {
             //throw new NotImplementedException();

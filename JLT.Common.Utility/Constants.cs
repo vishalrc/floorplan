@@ -36,6 +36,7 @@ namespace JLT.Common.Utility
             public const string  uasp_seatallocation= "uasp_seatallocation";
             public const string ussp_floor = "ussp_floor";
             public const string ussp_dashboard = "ussp_dashboard";
+            public const string ussp_associate = "ussp_associate";
         }
 
         /********************************************** SMS Keys *****************************************************************/
