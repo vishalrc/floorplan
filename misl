@@ -262,3 +262,61 @@ INSERT INTO `jlt_smdb`.`seat` (`seatid`, `seatlabel`, `cubicalno`, `rowno`, `col
 INSERT INTO `jlt_smdb`.`seat` (`seatid`, `seatlabel`, `cubicalno`, `rowno`, `columnno`, `colspan`, `rowspan`, `teamid`, `floorid`, `type`) VALUES ('261', '10B-LS-R01-S261', '1', '22', '1', '1', '1', '1', '1', '1');
 INSERT INTO `jlt_smdb`.`seat` (`seatid`, `seatlabel`, `cubicalno`, `rowno`, `columnno`, `colspan`, `rowspan`, `teamid`, `floorid`, `type`) VALUES ('262', '10B-LS-R01-S262', '1', '22', '2', '1', '1', '1', '1', '1');
 INSERT INTO `jlt_smdb`.`seat` (`seatid`, `seatlabel`, `cubicalno`, `rowno`, `columnno`, `colspan`, `rowspan`, `teamid`, `floorid`, `type`) VALUES ('263', '10B-LS-R01-S263', '1', '22', '3', '1', '1', '1', '1', '1');
+
+  if(p_manualaddexamineexml is not null) then begin
+			call `usp_processuploadexmineexml`(p_manualaddexamineexml);
+            /* TABLE tbl_uploadexamineexml(id int(11), uniqueid varchar(50),firstname varchar(200),lastname varchar(200),emailid varchar(200)); */
+               
+        
+			if(Select Count(0) from tbl_uploadexamineexml ) = 0 then begin
+			
+				Select 'No examinee data to save' into p_errormessage;
+				
+			end;
+			end if; 
+		
+			if (Select Count(0) FROM tbl_uploadexamineexml where uniqueid is null or firstname is null or lastname is null or emailid is null) > 0 then begin 
+			
+				Select 'All fields should have some value' into p_errormessage;
+			end;     
+			end if; 
+			
+			if (Select Count(0) FROM tbl_uploadexamineexml t join examinee e on e.uniqueid = t.uniqueid) > 0 then begin 
+			
+				Select 'One or more UniqueId submitted already exists' into p_errormessage;
+			end;     
+			end if; 
+		end;
+        end if;
+        
+        if(p_manualaddexamineexml is not null and (p_errormessage = '' or p_errormessage is null))then begin
+			DECLARE addexaminee_cursor CURSOR FOR 
+				SELECT uniqueid,firstname,lastname,emailid FROM tbl_uploadexamineexml;	
+                
+			-- declare NOT FOUND handler
+			DECLARE CONTINUE HANDLER 
+			FOR NOT FOUND SET v_finished = 1;
+
+			OPEN addexaminee_cursor;
+
+			get_row: LOOP
+
+			FETCH addexaminee_cursor INTO v_uniqueid,v_firstname,v_lastname,v_emailid;
+
+			IF v_finished = 1 THEN begin
+				LEAVE get_row;
+			end;
+			END IF;
+
+			Insert into examinee(`uniqueid`,`firstname`,`lastname`,`emailid`,`password`,`timestamp`,`accountid`,`isactive`)
+            values(v_uniqueid,v_firstname,v_lastname,v_emailid,ufn_randompasswordGenerator(8,2,0),utc_timestamp(),p_accountid,1);
+			select LAST_Insert_Id() into newid; 
+			insert into testexaminee(`password`,`testid`,`examineeid`,`timestamp`,`addedby`)
+			select ufn_randompasswordGenerator(8,2,0),p_testid,newid,utc_timestamp(),p_addedby;
+
+			END LOOP get_row;
+
+			CLOSE addexaminee_cursor;
+        end;
+        end if;
+    

@@ -134,22 +134,24 @@
             },
             SyncEmployee: function () {
                 $.ajax({
-                    url:  "Proctor/SyncTest",
+                    url:  "hrmsapi",
                     type: "GET",
                     async: true,
                     crossDomain: true,
-                    //beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + ''); },
                     datatype: "json",
                     data: "",
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data) {
-                        var testList = [];
+                        var employeeList = [];
                         if (data) {
                             if (data.length > 0) {
                                 for (var i = 0; i < data.length; i++) {
-                                    testList.push({ "examenginetestid": data[i].id, "name": data[i].name });
+                                    employeeList.push({
+                                        "associateno": data[i].id, "name": data[i].name, "departmentid": data[i].departmentid,
+                                        "isactive": data[i].isactive
+                                    });
                                 }
-                                AjaxCalls.SaveSyncTestData(testList);
+                                AjaxCalls.SaveSyncEmployeeData(employeeList);
                             }
                         }
                     },
@@ -157,9 +159,9 @@
                         var e = $.parseJSON(xhr.responseText);
                         //alert(e.message);
                     }
-                }); //SyncTest Ajax ends
+                }); //Syncemployee Ajax ends
             },
-            SaveSyncTestData: function (testList) {
+            SaveSyncEmployeeData: function (employeeList) {
                 $.ajax({
                     url: apiurl + "SyncUtility/SyncEmployee",
                     type: "POST",
@@ -167,18 +169,17 @@
                     crossDomain: true,
                     beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
                     datatype: "json",
-                    data: "=" + JSON.stringify(testList),
+                    data: "=" + JSON.stringify(employeeList),
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data) {
-                        AjaxCalls.GetTests();
-                        sessionStorage.removeItem('_activetests');
-                        alert(data.body + " tests synced");
+                        CommonMethods.Init();
+                        alert("Employee Data synced from source system!");
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         var e = $.parseJSON(xhr.responseText);
                         //alert(e.message);
                     }
-                }); //SaveSyncTestData Ajax ends
+                }); //SaveSyncEmployeeData Ajax ends
             }
         };
         /************************************************* AjaxCalls [Ends], UIEvents [Start] *************************************************************/

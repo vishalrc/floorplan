@@ -43,7 +43,7 @@ div.seatCharts-cell {
     color: #182C4E;
     height: 25px;
     width: 25px;
-    line-height: 25px;
+    line-height: 20px;
 }
 
 div.seatCharts-seat {
@@ -52,7 +52,7 @@ div.seatCharts-seat {
 }
 
 div.seatCharts-row {
-    height: 35px;
+    height: 30px;
 }
 
 div.seatCharts-seat.available {

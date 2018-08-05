@@ -18,20 +18,20 @@ namespace JLT.RestAPI.Controllers
         [HttpPost]
         [ActionName("SyncTest")]
         //[VTAuthorizeAttribute(Actions = Enums.Action.General)]
-        public HttpResponseMessage SyncTest(HttpRequestMessage request, [FromBody]string value)
+        public HttpResponseMessage SyncEmployee(HttpRequestMessage request, [FromBody]string value)
         {
             try
             {
                 if (string.IsNullOrEmpty(value))
                     throw new SecurityTokenException("501|Server Error: HTTP request body not found");
 
-                //var AuthHeader = HttpContext.Current.Request.Headers["Authorization"];
-                //if (string.IsNullOrEmpty(AuthHeader))
-                //    throw new SecurityTokenException("403:Authorization Error: Token not provided");
-              //  var objEntity = CommonUtility.Deserialize<List<Test>>(value);
+                var AuthHeader = HttpContext.Current.Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(AuthHeader))
+                    throw new SecurityTokenException("403:Authorization Error: Token not provided");
+                var objEntity = CommonUtility.Deserialize<List<Employee>>(value);
                 using (var objDAL = new SyncUtilityDAL())
                 {
-                    var id = 1;// objDAL.SyncTest(objEntity);
+                    var id = objDAL.SyncEmployee(objEntity);
 
                     return request.CreateResponse(HttpStatusCode.OK,
                             (new APIResponseBody
@@ -144,22 +144,23 @@ namespace JLT.RestAPI.Controllers
         }
 
         [HttpPost]
-        [ActionName("SyncExamine")]
+        [ActionName("SyncLeave")]
         //[VTAuthorizeAttribute(Actions = Enums.Action.General)]
-        public HttpResponseMessage SyncExamine(HttpRequestMessage request, [FromBody]string value)
+        public HttpResponseMessage SyncLeave(HttpRequestMessage request, [FromBody]string value)
         {
             try
             {
                 if (string.IsNullOrEmpty(value))
                     throw new SecurityTokenException("501|Server Error: HTTP request body not found");
 
-                //var AuthHeader = HttpContext.Current.Request.Headers["Authorization"];
-                //if (string.IsNullOrEmpty(AuthHeader))
-                //    throw new SecurityTokenException("403:Authorization Error: Token not provided");
-                var objEntity = CommonUtility.Deserialize<List<Employee>>(value);
+                var AuthHeader = HttpContext.Current.Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(AuthHeader))
+                    throw new SecurityTokenException("403:Authorization Error: Token not provided");
+
+                var objEntity = CommonUtility.Deserialize<List<seatvacancy>>(value);
                 using (var objDAL = new SyncUtilityDAL())
                 {
-                    var id = 1;// objDAL.SyncExamine(objEntity);
+                    var id = objDAL.SyncLeave(objEntity);
 
                     return request.CreateResponse(HttpStatusCode.OK,
                             (new APIResponseBody
