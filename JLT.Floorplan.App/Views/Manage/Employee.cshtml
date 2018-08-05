@@ -8,7 +8,6 @@
 
 <div class="wrapper-md">
     <button type="button" id="btnSyncEmployee" class="btn m-b-xs btn-sm btn-primary btn-addon"><i class="fa fa-download"></i>Sync Employee</button>
-
     <!-- Nav tabs -->
     <ul class="nav nav-tabs m-t" role="tablist">
         <li role="presentation" class="active"><a href="#active" aria-controls="active" role="tab"
@@ -41,22 +40,19 @@
         })
         $(document).ready(function () {
             CommonMethods.Init();
-            UIEvents.ActivateTest();
-            UIEvents.ArchiveTest();
-            UIEvents.DeleteTest();
-            UIEvents.SyncTest();
+            UIEvents.SyncEmployee();
 
         });
         /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
         var CommonMethods = {
             Init: function () {
-                if (sessionStorage['_tests']) {
-                    CommonMethods.PopulateTests($.parseJSON(sessionStorage['_tests']));
+                if (sessionStorage['_employee']) {
+                    CommonMethods.PopulateEmployee($.parseJSON(sessionStorage['_employee']));
                 } else {
-                    AjaxCalls.GetTests();
+                    AjaxCalls.GetEmployee();
                 }
             },
-            PopulateTests: function (TestsJson) {
+            PopulateEmployee: function (TestsJson) {
                 $("#active_row").html('');
                 $("#inactive_row").html('');
                 var activecount = 0, inactivecount = 0, celldiv = null, thumbnaildiv = null, testnamespan = null, actionspan = null, activatespan = null;
@@ -88,10 +84,10 @@
         };
         /************************************************* CommonMethods [Ends], AjaxCalls [Start] *************************************************************/
         var AjaxCalls = {
-            GetTests: function () {
+            GetEmployee: function () {
                 var postData = "{ }";
                 $.ajax({
-                    url: apiurl + "SyncUtility/GetTests",
+                    url: apiurl + "SyncUtility/GetEmployee",
                     type: "POST",
                     async: true,
                     crossDomain: true,
@@ -101,7 +97,7 @@
                     contentType: "application/json",
                     success: function (data) {
                         //var response = $.parseJSON(data);
-                        sessionStorage.setItem('_tests', data.body);
+                        sessionStorage.setItem('_employee', data.body);
                         CommonMethods.PopulateTests($.parseJSON(data.body));
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -110,9 +106,9 @@
                     }
                 });
             },
-            UpdateTestStatus: function (postData) {
+            UpdateEmployeeStatus: function (postData) {
                 $.ajax({
-                    url: apiurl + "SyncUtility/UpdateTestStatus",
+                    url: apiurl + "SyncUtility/UpdateEmployeeStatus",
                     type: "POST",
                     async: true,
                     crossDomain: true,
@@ -128,7 +124,7 @@
                     }
                 }); //UpdateTestStatus Ajax ends
             },
-            SyncTest: function () {
+            SyncEmployee: function () {
                 $.ajax({
                     url:  "Proctor/SyncTest",
                     type: "GET",
@@ -179,93 +175,12 @@
         };
         /************************************************* AjaxCalls [Ends], UIEvents [Start] *************************************************************/
         var UIEvents = {
-            SyncTest: function () {
+            SyncEmployee: function () {
                 $('#btnSyncEmployee').on('click', function () {
-                    AjaxCalls.SyncTest();
+                    AjaxCalls.SyncEmployee();
                 });
             },
-            ArchiveTest: function () {
-                $("#active_row").on('click', '.archive-test', function () {
-                    var testid = $(this).attr('testid');
-                    var postdata = {};
-                    postdata.id = testid;
-                    postdata.isactive = 0;
-                    AjaxCalls.UpdateTestStatus(postdata);
-                    var Tests = $.parseJSON(sessionStorage['_tests']);
-                    for (var i = 0; i < Tests.length; i++) {
-                        if (Tests[i].id == testid) {
-                            Tests[i].isactive = 0;
-                            break;
-                        }
-                    }
-                    sessionStorage.setItem('_tests', JSON.stringify(Tests));
-                    CommonMethods.PopulateTests(Tests);
-                    Tests = null;
-                    if (sessionStorage['_activetests']) {
-                        var ActiveTests = $.parseJSON(sessionStorage['_activetests']);
-                        if (ActiveTests) {
-                            for (var i = 0; i < ActiveTests.length; i++) {
-                                if (ActiveTests[i].id == testid) {
-                                    ActiveTests.splice(i, 1);
-                                    break;
-                                }
-                            }
-                            sessionStorage.setItem('_activetests', JSON.stringify(ActiveTests));
-                            ActiveTests = null;
-                        }
-                    }
-                });
-            },
-            DeleteTest: function () {
-                $("#inactive_row").on('click', '.delete-test', function () {
-                    if (confirm("Confirm test delete?")) {
-                        var testid = $(this).attr('testid');
-                        var postdata = {};
-                        postdata.id = testid;
-                        postdata.isactive = -1;
-                        AjaxCalls.UpdateTestStatus(postdata);
-                        var Tests = $.parseJSON(sessionStorage['_tests']);
-                        for (var i = 0; i < Tests.length; i++) {
-                            if (Tests[i].id == testid) {
-                                Tests[i].isactive = -1;
-                                break;
-                            }
-                        }
-                        sessionStorage.setItem('_tests', JSON.stringify(Tests));
-                        CommonMethods.PopulateTests(Tests);
-                        Tests = null;
-                    }
-                });
-            },
-            ActivateTest: function () {
-                $("#inactive_row").on('click', '.activate-test', function () {
-                    var testid = $(this).attr('testid');
-                    var postdata = {};
-                    postdata.id = testid;
-                    postdata.isactive = 1;
-                    AjaxCalls.UpdateTestStatus(postdata);
-                    var ActiveTests = null;
-                    if (sessionStorage['_activetests']) {
-                        ActiveTests = $.parseJSON(sessionStorage['_activetests']);
-                    }
-                    var Tests = $.parseJSON(sessionStorage['_tests']);
-                    for (var i = 0; i < Tests.length; i++) {
-                        if (Tests[i].id == testid) {
-                            Tests[i].isactive = 1;
-                            if (ActiveTests) {
-                                ActiveTests.push(Tests[i]);
-                                sessionStorage.setItem('_activetests', JSON.stringify(ActiveTests));
-                                ActiveTests = null;
-                            }
-                            break;
-                        }
-                    }
-                    sessionStorage.setItem('_tests', JSON.stringify(Tests));
-                    CommonMethods.PopulateTests(Tests);
-                    Tests = null;
-                });
-            }
-        };
+        }
         /************************************************* UIEvents [Ends] *************************************************************/
     })();
     
