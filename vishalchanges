@@ -1,0 +1,550 @@
+manage/employee.cshtml
+
+@using JLT.Common.Utility;
+@using JLT.Floorplan.Entity;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var authtoken = CommonUtility.LoggedInUser.authtoken;
+    var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
+    var userid = CommonUtility.LoggedInUser.id;
+}
+
+<div class="wrapper-md">
+    <button type="button" id="btnSyncEmployee" class="btn m-b-xs btn-sm btn-primary btn-addon"><i class="fa fa-download"></i>Sync Employee</button>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs m-t" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#active" aria-controls="active" role="tab"
+               data-toggle="tab">Employee List<span class="badge progress-bar-info" id="activebadge">0</span></a>
+        </li>
+        <li role="presentation">
+            <a href="#inactive" aria-controls="inactive" role="tab" data-toggle="tab">
+                Employee(s) on Planned Leave <span class="badge progress-bar-info" id="inactivebadge">0</span>
+            </a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="active">
+            <div class="row m-t" id="active_row">
+                <table id="list" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Employee Id</th>
+                            <th>Employee Name</th>
+                            <th>Email Id</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="inactive">
+            <div class="row m-t" id="inactive_row">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        //var apiurl = '@RestAPI';
+
+
+
+
+    (function () {
+        "use strict";
+        var apiurl = '@RestAPI',
+        baseURL = '@Url.Action("Index","Home")';
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        $(document).ready(function () {
+            CommonMethods.Init();
+            UIEvents.SyncEmployee();
+        });
+        /************************************************* document.ready [End], CommonMethods [Start] *************************************************************/
+        var CommonMethods = {
+            Init: function () {
+                if (sessionStorage['_employeeData']) {
+                    //CommonMethods.PopulateEmployee($.parseJSON(sessionStorage['_employee']));
+                    AjaxCalls.GetEmployeeJq();
+
+                } else {
+                    //AjaxCalls.GetEmployee();
+                    AjaxCalls.GetEmployeeJq();
+                }
+            },
+            PopulateEmployee: function (TestsJson) {
+                $("#active_row").html('');
+                $("#inactive_row").html('');
+                var activecount = 0, inactivecount = 0, celldiv = null, thumbnaildiv = null, testnamespan = null, actionspan = null, activatespan = null;
+                for (var i = 0; i < TestsJson.length; i++) {
+                    celldiv = $('<div>').addClass('col-xs-6 col-md-3');
+                    thumbnaildiv = $('<div>').addClass('thumbnail bg-testlist');
+                    testnamespan = $('<span>').html(TestsJson[i].name);
+                    thumbnaildiv.append(testnamespan);
+                    if (TestsJson[i].isactive == 1) {
+                        actionspan = $('<span>').addClass('fr cursor-pointer archive-test').attr({ "data-toggle": "tooltip", "title": "archive", "testid": TestsJson[i].id }).html('<i class="fa fa-archive"></i>');
+                        thumbnaildiv.append(actionspan);
+                        celldiv.append(thumbnaildiv);
+                        $("#active_row").append(celldiv);
+                        activecount += 1;
+                    } else if (TestsJson[i].isactive == 0) {
+                        actionspan = $('<span>').addClass('fr cursor-pointer delete-test m-l-xs').attr({ "data-toggle": "tooltip", "title": "delete", "testid": TestsJson[i].id }).html('<i class="fa fa-trash"></i>');
+                        activatespan = $('<span>').addClass('fr cursor-pointer activate-test').attr({ "data-toggle": "tooltip", "title": "activate", "testid": TestsJson[i].id }).html('<i class="fa fa-reply"></i>');
+                        thumbnaildiv.append(actionspan);
+                        thumbnaildiv.append(activatespan);
+                        celldiv.append(thumbnaildiv);
+                        $("#inactive_row").append(celldiv);
+                        inactivecount += 1;
+                    }
+                }
+                $('#activebadge').html(activecount);
+                $('#inactivebadge').html(inactivecount);
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        };
+        /************************************************* CommonMethods [Ends], AjaxCalls [Start] *************************************************************/
+        var AjaxCalls = {
+            GetEmployee: function () {
+                var postData = "{ }";
+                $.ajax({
+                    url: apiurl + "SyncUtility/GetEmployee",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: JSON.stringify(postData),
+                    contentType: "application/json",
+                    success: function (data) {
+                        //var response = $.parseJSON(data);
+                        sessionStorage.setItem('_employee', data.body);
+                        CommonMethods.PopulateTests($.parseJSON(data.body));
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        e = $.parseJSON(xhr.responseText);
+                        alert(e.message);
+                    }
+                });
+            },
+
+            GetEmployeeJq: function () {
+                //var arrayReturn = [];
+                var postData = "{ }";
+                var postData = {};
+                postData.id = @userid;
+                postData.isactive = 1;
+                                
+                $.ajax({
+                    url: apiurl + "Employee/GetEmployee",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(postData),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        var d = $.parseJSON(data.body)
+
+                        //for (var i = 0, len = d.length; i < len; i++) {
+                        //    arrayReturn.push([d[i].associateno, d[i].name, d[i].emailid]);
+                        //}
+                        sessionStorage.setItem('_employeeData', d);
+                        
+                        AjaxCalls.inittable(d);
+                        //CommonMethods.PopulateTests($.parseJSON(data.body));
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        e = $.parseJSON(xhr.responseText);
+                        alert(e.message);
+                    }
+                });
+
+                
+            },
+            inittable: function (d) {
+                var arrayReturn = [];
+
+                for (var i = 0, len = d.length; i < len; i++) {
+                    arrayReturn.push([d[i].associateno, d[i].name, d[i].emailid]);
+                }
+
+                $('#list').DataTable({
+                    "aaData": arrayReturn
+                });
+            },
+            UpdateEmployeeStatus: function (postData) {
+                $.ajax({
+                    url: apiurl + "SyncUtility/UpdateEmployeeStatus",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(postData),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //UpdateTestStatus Ajax ends
+            },
+            SyncEmployee: function () {
+                $.ajax({
+                    url:  "Proctor/SyncTest",
+                    type: "GET",
+                    async: true,
+                    crossDomain: true,
+                    //beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + ''); },
+                    datatype: "json",
+                    data: "",
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        var testList = [];
+                        if (data) {
+                            if (data.length > 0) {
+                                for (var i = 0; i < data.length; i++) {
+                                    testList.push({ "examenginetestid": data[i].id, "name": data[i].name });
+                                }
+                                AjaxCalls.SaveSyncTestData(testList);
+                            }
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SyncTest Ajax ends
+            },
+            SaveSyncTestData: function (testList) {
+                $.ajax({
+                    url: apiurl + "SyncUtility/SyncTest",
+                    type: "POST",
+                    async: true,
+                    crossDomain: true,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'token ' + '@authtoken'); },
+                    datatype: "json",
+                    data: "=" + JSON.stringify(testList),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        AjaxCalls.GetTests();
+                        sessionStorage.removeItem('_activetests');
+                        alert(data.body + " tests synced");
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var e = $.parseJSON(xhr.responseText);
+                        //alert(e.message);
+                    }
+                }); //SaveSyncTestData Ajax ends
+            }
+        };
+        /************************************************* AjaxCalls [Ends], UIEvents [Start] *************************************************************/
+        var UIEvents = {
+            SyncEmployee: function () {
+                $('#btnSyncEmployee').on('click', function () {
+                    AjaxCalls.SyncEmployee();
+                });
+            },
+        }
+        /************************************************* UIEvents [Ends] *************************************************************/
+    })();
+
+    </script>
+}
+
+
+shared/_layout.cshtml
+
+@{
+    var UserName = JLT.Common.Utility.CommonUtility.LoggedInUser.firstname + " " + JLT.Common.Utility.CommonUtility.LoggedInUser.lastname;
+    var UserId = JLT.Common.Utility.CommonUtility.LoggedInUser.id;
+    var UserRole = JLT.Common.Utility.CommonUtility.LoggedInUser.role;
+    var AdminRole = Convert.ToUInt64(JLT.Common.Utility.Enums.UserRoles.Admin);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>JLT Seat Plan | @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/animate.css/animate.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/font-awesome/css/font-awesome.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/assets/simple-line-icons/css/simple-line-icons.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/libs/jquery/bootstrap/dist/css/bootstrap.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/font.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/app.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/bootstrap-datetimepicker.css")" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/DataTables/datatables.min.css" rel="stylesheet" />
+    <script src="@Url.Content("~/libs/jquery/jquery/dist/jquery.js")"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="@Url.Content("~/libs/jquery/bootstrap-daterangepicker/daterangepicker.js")"></script>
+    <script src="@Url.Content("~/libs/jquery/moment/moment.js")"></script>
+    <script src="@Url.Content("~/js/bootstrap-datetimepicker.js")"></script>
+    <script src="~/DataTables/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            //$(".app").toggleClass("app-aside-folded", 10);
+            $('.select-entity').on('click', function () {
+                if ($(this).hasClass('entity-selected')) {
+                    $(this).removeClass('entity-selected');
+                }
+                else {
+                    $(this).addClass('entity-selected');
+                }
+            });
+            var layout_alert = '@TempData["ShowMessage"]';
+            if (layout_alert != null && layout_alert.length > 0) {
+                var layout_alert_msg = layout_alert.split('|');
+                ShowAlert(layout_alert_msg[1], layout_alert_msg[0]);
+            }
+
+        });
+        function ShowAlert(msg, type) {
+            if (type == 'success') {
+                $('#divAlert').removeClass('hide').fadeIn(500, HideMessage).html('<strong>Success! </strong>' + msg).removeClass('alert-danger').addClass('alert-success');
+            }
+            else {
+                $('#divAlert').removeClass('hide').fadeIn(500, HideMessage).html('<strong>Error! </strong>' + msg).removeClass('alert-success').addClass('alert-danger');
+            }
+        }
+        function HideMessage() {
+            $('#divAlert').fadeOut(5000, HideMsgControl);
+        }
+        function HideMsgControl() { }
+        function CleanStorate(){
+            sessionStorage.clear();
+        }
+    </script>
+</head>
+<body>
+    <div class="app app-header-fixed">
+        <!-- header -->
+        <header id="header" class="app-header navbar" role="menu">
+            <!-- navbar header -->
+            <div class="navbar-header bg-dark">
+                <button class="pull-right visible-xs dk" ui-toggle="show" target=".navbar-collapse">
+                    <i class="glyphicon glyphicon-cog"></i>
+                </button>
+                <button class="pull-right visible-xs" ui-toggle="off-screen" target=".app-aside" ui-scroll="app">
+                    <i class="glyphicon glyphicon-align-justify"></i>
+                </button>
+                <!-- brand -->
+                <a href="#/" class="navbar-brand text-lt">
+                    <!-- <i class="fa fa-btc"></i> -->
+                    <!-- <img src="img/logo.png" alt="." class="hide"> -->
+                    <span class="hidden-folded m-l-xs">JLT India</span>
+                </a>
+                <!-- / brand -->
+            </div>
+            <!-- / navbar header -->
+            <!-- navbar collapse -->
+            <div class="collapse pos-rlt navbar-collapse box-shadow bg-white-only">
+                <!-- buttons -->
+                <div class="nav navbar-nav hidden-xs">
+                    <a href="#" class="btn no-shadow navbar-btn" ui-toggle="app-aside-folded" target=".app">
+                        <i class="fa fa-dedent fa-fw text"></i>
+                        <i class="fa fa-indent fa-fw text-active"></i>
+                    </a>
+                    <a href="#" class="btn no-shadow navbar-btn" ui-toggle="show" target="#aside-user">
+                        <i class="icon-user fa-fw"></i>
+                    </a>
+                </div>
+                <!-- / buttons -->
+                <!-- nabar right -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle clear">
+                            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                                <img src="@Url.Content("~/img/" + JLT.Common.Utility.CommonUtility.LoggedInUser.profilepic)" alt="...">
+                                <i class="on md b-white bottom"></i>
+                            </span>
+                            <span class="hidden-sm hidden-md">@UserName</span> <b class="caret"></b>
+                        </a>
+                        <!-- dropdown -->
+                        <ul class="dropdown-menu animated fadeInRight w">
+                            @if ((UserRole & AdminRole) == AdminRole)
+                            {
+                                <li>
+                                    <a href="@Url.Action("AccountSetting", "Account")">
+                                        <span>Account Settings</span>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                                <a href="@Url.Action("MyProfile", "Account")"></a>
+                            </li>
+                            <li>
+                                <a ui-sref="app.docs">
+                                    <span class="label bg-info pull-right">new</span>
+                                    Help
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a ui-sref="access.signin" onclick="javascript:return CleanStorate();" href="@Url.Action("LogOff", "Account")">Logout</a>
+                            </li>
+                        </ul>
+                        <!-- / dropdown -->
+                    </li>
+                </ul>
+                <!-- / navbar right -->
+            </div>
+            <!-- / navbar collapse -->
+
+        </header>
+        <!-- / header -->
+        <!-- aside -->
+        <aside id="aside" class="app-aside hidden-xs bg-dark">
+            <div class="aside-wrap">
+                <div class="navi-wrap">
+                    <!-- user -->
+                    <div class="clearfix hidden-xs text-center hide" id="aside-user">
+                        <div class="dropdown wrapper">
+                            <a href="@Url.Action("MyProfile", "Account")">
+                                <span class="thumb-lg w-auto-folded avatar m-t-sm">
+                                    <img src="@Url.Content("~/img/" + JLT.Common.Utility.CommonUtility.LoggedInUser.profilepic)" class="img-full" alt="...">
+                                </span>
+                            </a>
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle hidden-folded">
+                                <span class="clear">
+                                    <span class="block m-t-sm">
+                                        <strong class="font-bold text-lt">@UserName</strong>
+                                        <b class="caret"></b>
+                                    </span>
+                                    <span class="text-muted text-xs block"></span>
+                                </span>
+                            </a>
+                            <!-- dropdown -->
+                            <ul class="dropdown-menu animated fadeInRight w hidden-folded">
+
+                                @if ((UserRole & AdminRole) == AdminRole)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("AccountSetting", "Account")">Account Settings</a>
+                                    </li>
+                                }
+                                <li>
+                                    <a href="@Url.Action("MyProfile", "Account")">Profile</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="@Url.Action("LogOff", "Account")">Logout</a>
+                                </li>
+                            </ul>
+                            <!-- / dropdown -->
+                        </div>
+                        <div class="line dk hidden-folded"></div>
+                    </div>
+                    <!-- / user -->
+                    <!-- nav -->
+                    <nav ui-nav class="navi clearfix">
+                        <ul class="nav">
+                            <li>
+                                <a href="@Url.Action("index", "Home")">
+                                    <i class="glyphicon glyphicon-stats icon text-primary-dker"></i>
+                                    <span class="font-bold">Dashboard</span>
+                                </a>
+                            </li>
+
+                            <li class="line dk"></li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "Floorplan")">
+                                    <i class="glyphicon glyphicon-book icon text-primary-dker"></i>
+                                    <span>Seat Plan</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Employee", "Manage")">
+                                    <i class="glyphicon glyphicon-list icon text-primary-dker"></i>
+                                    <span>Employee</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Leave", "Manage")">
+                                    <i class="glyphicon glyphicon-refresh icon text-primary-dker"></i>
+                                    <span>Leaves</span>
+                                </a>
+                            </li>
+                            @*<li>
+                                    <a href="@Url.Action("AssignSeat", "Manage")">
+                                        <i class="glyphicon glyphicon-cog icon text-primary-dker"></i>
+                                        <span>Assign Seats</span>
+                                    </a>
+                                </li>*@
+                            <li>
+                                <a href="@Url.Action("Users", "Manage")">
+                                    <i class="glyphicon glyphicon-user icon text-primary-dker"></i>
+                                    <span>Manage Users</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                    <!-- nav -->
+                    @*<!-- aside footer -->
+                        <div class="wrapper m-t">
+                          <div class="text-center-folded">
+                            <span class="pull-right pull-none-folded">60%</span>
+                            <span class="hidden-folded">Milestone</span>
+                          </div>
+                          <div class="progress progress-xxs m-t-sm dk">
+                            <div class="progress-bar progress-bar-info" style="width: 60%;">
+                            </div>
+                          </div>
+                          <div class="text-center-folded">
+                            <span class="pull-right pull-none-folded">35%</span>
+                            <span class="hidden-folded">Release</span>
+                          </div>
+                          <div class="progress progress-xxs m-t-sm dk">
+                            <div class="progress-bar progress-bar-primary" style="width: 35%;">
+                            </div>
+                          </div>
+                        </div>
+                        <!-- / aside footer -->*@
+                </div>
+            </div>
+        </aside>
+        <!-- / aside -->
+        <!-- content -->
+        <div id="content" class="app-content" role="main">
+            <div class="app-content-body ">
+                <div class="bg-light lter b-b wrapper-xs no-dashboard">
+                    <h1 class="m-n font-thin h3">
+                        @ViewBag.PageTitle
+                    </h1>
+                </div>
+                <div id="divAlert" class="alert alert-success hide" role="alert"></div>
+                <!-- Body Content Goes Here -->
+                @RenderBody()
+            </div>
+        </div>
+        <!-- / content -->
+        <!-- footer -->
+        <footer id="footer" class="app-footer" role="footer">
+            <div class="wrapper b-t bg-light">
+                <span class="pull-right">2.0.2 <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
+                &copy; 2018 www.india.jlt.com
+            </div>
+        </footer>
+        <!-- / footer -->
+    </div>
+    <script src="@Url.Content("~/libs/jquery/bootstrap/dist/js/bootstrap.js")"></script>
+    <script src="@Url.Content("~/js/ui-load.js")"></script>
+    <script src="@Url.Content("~/js/ui-jp.config.js")"></script>
+    <script src="@Url.Content("~/js/ui-jp.js")"></script>
+    <script src="@Url.Content("~/js/ui-nav.js")"></script>
+    <script src="@Url.Content("~/js/ui-toggle.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
