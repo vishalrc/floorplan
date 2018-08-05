@@ -20,9 +20,11 @@ SELECT a.`associateid`,
     d.`departmentname`,
     a.`seatno`,
     a.`Photo`,
-    a.`isactive`
+    a.`isactive`,
+    case when l.seatvacancyid is null then 0 else 1 end `onleave`
 FROM `associate` a join `department` d 
 on a.departmentid=d.departmentid
+left join  seatvacancy l on l.associateno=a.associateno and now() between l.startdate and l.enddate
 Where (a.associateid=p_associateid or p_associateid  is null)
 and (a.associateno=p_associateno or p_associateno is null)
 and (a.name like concat('%' , p_name , '%') or p_name is null)

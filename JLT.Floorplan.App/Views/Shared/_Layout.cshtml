@@ -105,7 +105,7 @@
                         </a>
                         <!-- dropdown -->
                         <ul class="dropdown-menu animated fadeInRight w">
-                           @if ((UserRole & AdminRole) == AdminRole)
+                            @if ((UserRole & AdminRole) == AdminRole)
                             {
                                 <li>
                                     <a href="@Url.Action("AccountSetting", "Account")">
@@ -278,6 +278,7 @@
     <script src="@Url.Content("~/js/ui-jp.js")"></script>
     <script src="@Url.Content("~/js/ui-nav.js")"></script>
     <script src="@Url.Content("~/js/ui-toggle.js")"></script>
+    <script src="@Url.Content("~/js/jquery.dataTables.min.js")"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

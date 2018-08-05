@@ -23,6 +23,8 @@ namespace JLT.Floorplan.Entity
         public string departmentname { get; set; }
         public byte[] photo { get; set; }
         public bool? isactive { get; set; }
+        public string seatno{ get; set; }
+        public bool onleave { get; set; }
         public void Dispose()
         {
             //throw new NotImplementedException();
