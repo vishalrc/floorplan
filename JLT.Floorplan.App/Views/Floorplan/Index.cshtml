@@ -3,7 +3,10 @@
     ViewBag.Title = "Seat Plan";
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
-
+    var Userrole = JLT.Common.Utility.CommonUtility.LoggedInUser.role;
+    var Adminrole = Convert.ToUInt64(Enums.UserRoles.Admin);
+    var ManagerRole = Convert.ToUInt64(Enums.UserRoles.Manager);
+    var UserId = CommonUtility.LoggedInUser.id;
 }
 <link rel="stylesheet" href="@Url.Content("~/css/fp.css")" type="text/css" />
 <link rel="stylesheet" href="@Url.Content("~/css/jquery.seat-charts.css")" type="text/css" />
@@ -26,33 +29,35 @@
             <div class="front-indicator" style="float:right">Lake Side</div>
             <div style="clear:both"></div>
         </div>
+        @if (((Userrole & Adminrole) == Adminrole) || ((Userrole & ManagerRole) == ManagerRole))
+        {
+            <div class="booking-details">
+                <h2>Seat Details</h2>
 
-        <div class="booking-details">
-            <h2>Seat Details</h2>
-
-            <h3> Selected Seats</h3>
-            <ul id="selected-seats" style="min-height:25px"></ul>
-            <div style="width:100px">
-                <label class="col-sm-2 control-label">Date</label>
-                <div class="col-sm-10">
-                    <input ui-jq="daterangepicker" id="daterange" ui-options="{format: 'DD/MM/YYYY'}" class="form-control w-md active rounded">
-                </div>
-                <div style="clear:both"></div>
-                <div style="width:150px">
-                    <label class="col-sm-2 control-label">Employee#</label>
+                <h3> Selected Seats</h3>
+                <ul id="selected-seats" style="min-height:25px"></ul>
+                <div style="width:100px">
+                    <label class="col-sm-2 control-label">Date</label>
                     <div class="col-sm-10">
-                        <input id="employeeno" type="text" maxlength="100" name="q" accesskey="b"  autocomplete="off" placeholder="Emloyee name" role="textbox" aria-autocomplete="list" aria-haspopup="true"
-                               class="form-control w-md rounded" />
-                        <input id="hdnemployeeno" type="hidden"/>
+                        <input ui-jq="daterangepicker" id="daterange" ui-options="{format: 'DD/MM/YYYY'}" class="form-control w-md active rounded">
                     </div>
-                </div><p style="clear:both"></p>
-                <div class="col-sm-10">
-                    <button id="allocateseat" class="btn btn-success">Allocate &raquo;</button>
+                    <div style="clear:both"></div>
+                    <div style="width:150px">
+                        <label class="col-sm-2 control-label">Employee#</label>
+                        <div class="col-sm-10">
+                            <input id="employeeno" type="text" maxlength="100" name="q" accesskey="b" autocomplete="off" placeholder="Emloyee name" role="textbox" aria-autocomplete="list" aria-haspopup="true"
+                                   class="form-control w-md rounded" />
+                            <input id="hdnemployeeno" type="hidden" />
+                        </div>
+                    </div><p style="clear:both"></p>
+                    <div class="col-sm-10">
+                        <button id="allocateseat" class="btn btn-success">Allocate &raquo;</button>
+                    </div>
                 </div>
-            </div>
 
-            <div id="legend"><div class="line line-dashed b-b line-lg pull-in"></div></div>
-        </div>
+                <div id="legend"><div class="line line-dashed b-b line-lg pull-in"></div></div>
+            </div>
+        }
     </div>
 </div>
 <script src="@Url.Content("~/js/jquery.seat-charts.js")"></script>
@@ -65,11 +70,10 @@
     firstSeatLabel = 0;
     var previd = '';
     $(document).ready(function () {
-        
         $("#employeeno").autocomplete({
-            source: function (request, response) {
+                         source: function (request, response) {
                 $.ajax({
-                    url: apiurl + "Employee/GetEmployee",
+                                 url: apiurl + "Employee/GetEmployee",
                     type: "POST",
                     async: false,
                     crossDomain: true,
@@ -78,25 +82,25 @@
                     data: "=" + JSON.stringify({ name: request.term }),
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data) {
-                       var d= $.parseJSON(data.body)
+                                     var d= $.parseJSON(data.body)
                         response($.map(d, function (item) {
-                            return {
-                                label: item.name,
+                                         return {
+                                             label: item.name,
                                 value: item.associateno
-                            }
-                        }))
+                                                 }
+                                     }))
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert("Error");
-                    }
-                });
-            },
+                                     alert("Error");
+                                 }
+                             });
+                         },
             minLength: 3,
             select: function (event, ui) {
                 $("#employeeno").val(ui.item.label); // display the selected text
                 $("#hdnemployeeno").val(ui.item.value); // save selected id to hidden input
-                return false;
-            },
+                     return false;
+                 },
         });
 
         try {
@@ -111,36 +115,36 @@
             $counter = $('#counter'),
             $total = $('#total'),
             sc = $('#seat-map').seatCharts({
-                map: seatmap,
+             map: seatmap,
                 seats: {
-                    f: {
-                        classes: 'general-seat', //your custom CSS class
+                 f: {
+                     classes: 'general-seat', //your custom CSS class
                     },
 
                 },
                 naming: {
-                    top: false,
+                 top: false,
                     getLabel: function (character, row, column) {
 
-                    },
+                 },
                 },
                 legend: {
-                    node: $('#legend'),
+                 node: $('#legend'),
                     items: [
                         ['f', 'available', 'Available'],
                         ['f', 'unavailable', 'Assigned'],
                     ]
                 },
                 click: function () {
-                    if (this.status() == 'available') {
+             if (this.status() == 'available') {
                         $("#" + previd).toggleClass("selected available");
-                        //let's create a new <li> which we'll add to the cart items
-                        var seat = $('<li>' + this.settings.label + '</b></li>')
-                            .attr('id', 'cart-item-' + this.settings.id)
-                            .attr('seatId', this.settings.id)
+                 //let's create a new <li> which we'll add to the cart items
+                 var seat = $('<li>' + this.settings.label + '</b></li>')
+                     .attr('id', 'cart-item-' + this.settings.id)
+                     .attr('seatId', this.settings.id)
                         //.appendTo();
                         $cart.html(seat);
-                        previd = this.settings.id;
+                 previd = this.settings.id;
                         /*
                          * Lets update the counter and total
                          *
@@ -149,51 +153,51 @@
                          */
                         $counter.html(sc.find('selected').length);
 
-                        return 'selected';
-                    } else if (this.status() == 'selected') {
+                 return 'selected';
+             } else if (this.status() == 'selected') {
                         //update the counter
                         // $counter.text(sc.find('selected').length - 1);
 
                         //remove the item from our cart
                         $('#cart-item-' + this.settings.id).remove();
 
-                        //seat has been vacated
-                        return 'available';
-                    } else if (this.status() == 'unavailable') {
-                        //seat has been already booked
-                        return 'unavailable';
-                    } else {
-                        return this.style();
-                    }
-                }
+                 //seat has been vacated
+                 return 'available';
+             } else if (this.status() == 'unavailable') {
+                 //seat has been already booked
+                 return 'unavailable';
+             } else {
+                 return this.style();
+             }
+         }
             });
 
         //this will handle "[cancel]" link clicks
         $('#selected-seats').on('click', '.cancel-cart-item', function () {
-            //let's just trigger Click event on the appropriate seat, so we don't have to repeat the logic here
-            sc.get($(this).parents('li:first').data('seatId')).click();
-        });
+             //let's just trigger Click event on the appropriate seat, so we don't have to repeat the logic here
+             sc.get($(this).parents('li:first').data('seatId')).click();
+         });
 
         //let's pretend some seats have already been booked
         sc.get(booked).status('unavailable');
 
         $('#allocateseat').on('click', function () {
-            if ($('#hdnemployeeno').val() == '') {
-                alert('Please select valid employee!'); return
-            }
-            if ($('#daterange').val() == '') {
-                alert('Please select valid date range!'); return
-            }
-            if ($('ul#selected-seats li:first').text() == '') {
-                alert('Please select seat!'); return
-            }
+             if ($('#hdnemployeeno').val() == '') {
+                 alert('Please select valid employee!'); return
+             }
+             if ($('#daterange').val() == '') {
+                 alert('Please select valid date range!'); return
+             }
+             if ($('ul#selected-seats li:first').text() == '') {
+                 alert('Please select seat!'); return
+             }
 
-            var model = {
+             var model = {
                 seatno: $('ul#selected-seats li:first').attr('seatid'), startdate: $('#daterange').val().split(' - ')[0], enddate: $('#daterange').val().split(' - ')[1]
                 , employeeno: $('#hdnemployeeno').val()
             };
             $.ajax({
-                url: apiurl + "Masters/allocateseat",
+             url: apiurl + "Masters/allocateseat",
                 type: "POST",
                 async: false,
                 crossDomain: true,
@@ -202,18 +206,18 @@
                 data: "=" + JSON.stringify(model),
                 contentType: "application/x-www-form-urlencoded",
                 success: function (data) {
-                    if (data.body == "1") {
-                        alert("seat allocated successfully!");
-                        location.reload();
-                    }
-                    //alert(data.body);
+                 if (data.body == "1") {
+                     alert("seat allocated successfully!");
+                     location.reload();
+                 }
+                 //alert(data.body);
 
-                },
+             },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    var e = $.parseJSON(xhr.responseText);
-                    alert(e.message);
-                }
-            });
+                 var e = $.parseJSON(xhr.responseText);
+                 alert(e.message);
+             }
+         });
         });
     });
     var AjaxCalls = {

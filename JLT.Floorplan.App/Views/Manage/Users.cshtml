@@ -5,8 +5,8 @@
     var authtoken = CommonUtility.LoggedInUser.authtoken;
     var RestAPI = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.RestServiceURL);
     var Adminrole = Convert.ToInt32(Enums.UserRoles.Admin);
-    var Authrole = Convert.ToInt32(Enums.UserRoles.Manager);
-    var Proctorrole = Convert.ToInt32(Enums.UserRoles.TeamMember);
+    var managerrole = Convert.ToInt32(Enums.UserRoles.Manager);
+    var teammemberrole= Convert.ToInt32(Enums.UserRoles.TeamMember);
     var emailregex = CommonUtility.GetAppSettingKey(Constants.ApplicationConfiguration.EamilRegEx);
 }
 
@@ -60,11 +60,11 @@
                                    <i></i>Admin
                                </label>
                                <label class="i-checks i-checks-sm">
-                                   <input type="checkbox" class="form-control" id="chkProctor" name="role" value="33">
+                                   <input type="checkbox" class="form-control" id="chkmanager" name="role" value="17">
                                    <i></i>Managers
                                </label>
                                <label class="i-checks i-checks-sm">
-                                   <input type="checkbox" class="form-control" id="chkAuth" name="role" value="17">
+                                   <input type="checkbox" class="form-control" id="chkmember" name="role" value="33">
                                    <i></i>Team Members
                                </label>
 
@@ -212,8 +212,8 @@
             $('#txtEmail').val('');
             $('#txtPassword').val('');
             $('#chkAdmin')[0].checked = false;
-            $('#chkAuth')[0].checked = false;
-            $('#chkProctor')[0].checked = false;
+            $('#chkmember')[0].checked = false;
+            $('#chkmanager')[0].checked = false;
             $('#radActive').prop("checked", true);
             $('#ug_UserName').removeClass('has-error has-success has-feedback');
             $('#txtUserName').attr({placeholder: "User name"});
@@ -296,7 +296,7 @@
                     result = false;
                 }
             }
-            if ($('#chkAdmin').is(":checked") || $('#chkAuth').is(":checked") || $('#chkProctor').is(":checked")) {
+            if ($('#chkAdmin').is(":checked") || $('#chkmember').is(":checked") || $('#chkmanager').is(":checked")) {
                 $('#ug_Role').removeClass('has-error').addClass('has-success');
             }else{
                 $('#ug_Role').addClass('has-error').removeClass('has-success');
@@ -359,14 +359,14 @@
         FilterProctorUser: function() {
             $('#filter-proctor-user').on('click', function(){
                 var Users = $.parseJSON(sessionStorage['_users']);
-                Users = SortFilter.FilterJson(Users,'role',@Proctorrole);
+                Users = SortFilter.FilterJson(Users,'role',@managerrole);
                 CommonMethods.PopulateUsers(Users);
             });
         },
         FilterAuthUser: function() {
             $('#filter-auth-user').on('click', function(){
                 var Users = $.parseJSON(sessionStorage['_users']);
-                Users = SortFilter.FilterJson(Users,'role',@Authrole);
+                Users = SortFilter.FilterJson(Users,'role',@teammemberrole);
                 CommonMethods.PopulateUsers(Users);
             });
         },
@@ -458,11 +458,11 @@
             if ($('#chkAdmin').is(":checked")) {
                 roles += '2,';
             }
-            if ($('#chkAuth').is(":checked")) {
-                roles += '3,';
-            }
-            if ($('#chkProctor').is(":checked")) {
+            if ($('#chkmember').is(":checked")) {
                 roles += '4,';
+            }
+            if ($('#chkmanager').is(":checked")) {
+                roles += '3,';
             }
             if (roles.length > 0) {
                 postData.roles = roles.substring(0, (roles.length - 1));
@@ -601,15 +601,15 @@
                         } else {
                             $('#chkAdmin')[0].checked = false;
                         }
-                        if ((user.role & @Authrole) == @Authrole) {
-                            $('#chkAuth')[0].checked = true;
+                        if ((user.role & @teammemberrole) == @teammemberrole) {
+                            $('#chkmember')[0].checked = true;
                         } else {
-                            $('#chkAuth')[0].checked = false;
+                            $('#chkmember')[0].checked = false;
                         }
-                        if ((user.role & @Proctorrole) == @Proctorrole) {
-                            $('#chkProctor')[0].checked = true;
+                        if ((user.role & @managerrole) == @managerrole) {
+                            $('#chkmanager')[0].checked = true;
                         } else {
-                            $('#chkProctor')[0].checked = false;
+                            $('#chkmanager')[0].checked = false;
                         }
                         if (user.isenabled == 1) {
                             $('#radActive').prop("checked", true);

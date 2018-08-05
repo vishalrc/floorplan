@@ -153,8 +153,8 @@ namespace JLT.Floorplan.Controllers
         {
             if (TempData["unauth"] != null)
             {
-                ViewBag.PageTitle = "Unauthorised Page";
-                ViewBag.Title = "Unauthorised Page";
+                ViewBag.PageTitle = "Access Denied";
+                ViewBag.Title = "Unauthorised Access";
                 return View();
             }
             else
