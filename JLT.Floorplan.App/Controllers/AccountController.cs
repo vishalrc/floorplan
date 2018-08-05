@@ -26,6 +26,9 @@ namespace JLT.Floorplan.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            ViewBag.PageTitle = "Login";
+            ViewBag.Title = "Login";
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

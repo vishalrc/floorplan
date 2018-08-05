@@ -1,78 +1,39 @@
 ﻿@model JLT.Floorplan.Entity.CurrentLogedInUser
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_NoNavLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>JLT | Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
-    <link rel="stylesheet" href="@Url.Content("~/libs/assets/animate.css/animate.css")" type="text/css" />
-    <link rel="stylesheet" href="@Url.Content("~/libs/assets/font-awesome/css/font-awesome.min.css")" type="text/css" />
-    <link rel="stylesheet" href="@Url.Content("~/libs/assets/simple-line-icons/css/simple-line-icons.css")" type="text/css" />
-    <link rel="stylesheet" href="@Url.Content("~/libs/jquery/bootstrap/dist/css/bootstrap.css")" type="text/css" />
-    <link rel="stylesheet" href="@Url.Content("~/css/font.css")" type="text/css" />
-    <link rel="stylesheet" href="@Url.Content("~/css/app.css")" type="text/css" />
-    <script src="@Url.Content("~/libs/jquery/jquery/dist/jquery.js")"></script>
-    <script>
-        $(document).ready(function () {
-            $('#userid').focus();
-            $('#password').val('');
-        });
-    </script>
-</head>
-<body>
-<div class="app app-header-fixed  ">
-  
 
 <div class="container w-xxl w-auto-xs">
-  <a href class="navbar-brand block m-t">JLT India Seat Management</a>
-  <div class="m-b-lg">
-    <div class="wrapper text-center">
-      <strong>Sign in to the application</strong>
+    <a href class="navbar-brand block m-t">JLT India Seat Management</a>
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+            <strong>Sign in to the application</strong>
+        </div>
+        @using (Ajax.BeginForm("Login", "Account", FormMethod.Post, null, new { name = "form", @class = "form-validation" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="text-danger wrapper text-center">@ViewBag.Error</div>
+            <div class="list-group list-group-sm">
+                <div class="list-group-item">
+                    @Html.TextBoxFor(t => t.userid, null, new { type = "text", @class = "form-control no-border", placeholder = "UserID", required = "required" })
+                </div>
+                <div class="list-group-item">
+                    @Html.TextBoxFor(t => t.password, null, new { type = "password", @class = "form-control no-border", placeholder = "Password", required = "required" })
+                </div>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block">Log in</button>
+            <div class="text-center m-t m-b"><a href="#">Forgot password?</a></div>
+            <div class="line line-dashed"></div>
+        }
     </div>
-    @*<form name="form" class="form-validation" action="Index">*@
-     @using (Ajax.BeginForm("Login", "Account", FormMethod.Post, null, new {name="form", @class = "form-validation" }))
-     {
-         @Html.AntiForgeryToken()
-      <div class="text-danger wrapper text-center">@ViewBag.Error</div>
-      <div class="list-group list-group-sm">
-        <div class="list-group-item">
-          @*<input type="email" placeholder="Email" class="form-control no-border" required>*@
-          @Html.TextBoxFor(t => t.userid, null, new { type = "text", @class = "form-control no-border", placeholder = "UserID", required = "required" })
-        </div>
-        <div class="list-group-item">
-           @*<input type="password" placeholder="Password" class="form-control no-border" required>*@
-           @Html.TextBoxFor(t => t.password, null, new { type = "password", @class = "form-control no-border", placeholder = "Password", required = "required" })
-        </div>
-      </div>
-      <button type="submit" class="btn btn-lg btn-primary btn-block">Log in</button>
-      <div class="text-center m-t m-b"><a href="#">Forgot password?</a></div>
-      <div class="line line-dashed"></div>
-     }
-    @*</form>*@
-  </div>
-  <div class="text-center">
-    <p>
-  <small class="text-muted">&copy; 2018 www.jlt. All Rights Reserved.</small>
-</p>
-  </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#userid').focus();
+        $('#password').val('');
+    });
+</script>
 
-
-</div>
-
-    <script src="@Url.Content("~/libs/jquery/bootstrap/dist/js/bootstrap.js")"></script>
-    <script src="@Url.Content("~/js/ui-load.js")"></script>
-    <script src="@Url.Content("~/js/ui-jp.config.js")"></script>
-    <script src="@Url.Content("~/js/ui-jp.js")"></script>
-    <script src="@Url.Content("~/js/ui-nav.js")"></script>
-    <script src="@Url.Content("~/js/ui-toggle.js")"></script>
-
-</body>
-</html>
 
 
